@@ -1,21 +1,25 @@
-# Mini Test
+===========
+Mini Test
+===========
 
 This project is inspired by Ruby minispec, but now it just implement some methods including:
     
     must_equal, must_true, must_raise.
 
-github: [https://github.com/jichen3000/minitest](https://github.com/jichen3000/minitest)
+github: https://github.com/jichen3000/minitest
 
-pypi: [https://pypi.python.org/pypi/minitest](https://pypi.python.org/pypi/minitest)
+pypi: https://pypi.python.org/pypi/minitest
 
 -----------------------
 
-### Author
+Author
+=========
 
 Colin Ji <jichen3000@gmail.com>
 
 
-### How to use
+How to use
+=========
 install:
 
     pip instsall minitest
@@ -81,7 +85,8 @@ result:
     4 tests, 6 assertions, 2 failures, 0 errors.
     [Finished in 0.1s]
     
-### Other useful function
+Other useful function
+=========
 
 p, pp, length, size, these four functions could been used by any object.
     

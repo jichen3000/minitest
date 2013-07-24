@@ -10,8 +10,6 @@ github: https://github.com/jichen3000/minitest
 
 pypi: https://pypi.python.org/pypi/minitest
 
------------------------
-
 Author
 =========
 

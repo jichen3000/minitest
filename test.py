@@ -34,25 +34,8 @@ if __name__ == '__main__':
         # test excecption
         with test("test must_raise"):
             (lambda : div_zero()).must_raise(ZeroDivisionError)
-    # Running tests:
-
-    # .FF.
-
-    # Finished tests in 0.011786s.
-
-    # 1) Failure:
-    # The line No is [/Users/Colin/work/minitest/minitest/with_test.py:163]:
-    # --- expected
-    # +++ actual
-    # -[True]
-    # #[False]
-
-    # 2) Failure:
-    # The line No is [/Users/Colin/work/minitest/minitest/with_test.py:168]:
-    # --- expected
-    # +++ actual
-    # -[2]
-    # #[1]
-
-    # 4 tests, 6 assertions, 2 failures, 0 errors.
-    # [Finished in 0.1s]
+            
+        tself.jc.p()
+        tself.jc.pp()
+        [1, 2].length().pp()
+        (1, 2).size().pp()

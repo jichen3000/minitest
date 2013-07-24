@@ -1,5 +1,4 @@
 # http://guide.python-distribute.org/creation.html
-# https://github.com/jichen3000/codes/tree/master/python/minitest
 
 if __name__ == '__main__':
     # import the minitest
@@ -34,7 +33,7 @@ if __name__ == '__main__':
         # test excecption
         with test("test must_raise"):
             (lambda : div_zero()).must_raise(ZeroDivisionError)
-            
+
         tself.jc.p()
         tself.jc.pp()
         [1, 2].length().pp()

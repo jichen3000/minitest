@@ -56,7 +56,7 @@ code:
             def div_zero():
                 1/0
                 
-            # test excecption
+            # test exception
             with test("test must_raise"):
                 (lambda : div_zero()).must_raise(ZeroDivisionError)
 

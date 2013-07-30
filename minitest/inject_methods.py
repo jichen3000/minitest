@@ -52,12 +52,34 @@ def must_raise(self, raised_exception):
     else:
         "It must be a function."
 
-def p(self):
-    print self
+def gen_title_from_stack_info(stack_info):
+    ''' it will generate the title from stack info.
+
+    '''
+    text  = stack_info[-2][-1]
+    index = text.rfind(".")
+    return text[:index]+" :"
+
+import traceback
+def p(self, title=None, auto_get_title=True):
+    if title:
+        print title, self
+    else:
+        if auto_get_title:
+            print gen_title_from_stack_info(
+                traceback.extract_stack()), self
+        else:
+            print self
     return self
 
 from pprint import pprint
-def pp(self):
+def pp(self, title=None, auto_get_title=True):
+    if title:
+        print title
+    else:
+        if auto_get_title:
+            print gen_title_from_stack_info(
+                traceback.extract_stack())
     pprint(self)
     return self
 

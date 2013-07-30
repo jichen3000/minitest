@@ -174,8 +174,12 @@ if __name__ == '__main__':
         with test("test must_raise"):
             (lambda : div_zero()).must_raise(ZeroDivisionError)
 
-        tself.jc.p()
+        tself.jc.p( )
+        tself.jc.p(auto_get_title=False)
+        tself.jc.p("jc would be:")
         tself.jc.pp()
+        tself.jc.pp(auto_get_title=False)
+        tself.jc.pp("jc would be:")
         [1, 2].length().pp()
         (1, 2).size().pp()
 

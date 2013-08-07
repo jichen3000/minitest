@@ -8,6 +8,12 @@ some methods including:
 
     must_equal, must_true, must_raise.
 
+And some other useful functions:
+
+::
+
+    p, pp, length, size.
+
 github: https://github.com/jichen3000/minitest
 
 pypi: https://pypi.python.org/pypi/minitest
@@ -98,12 +104,39 @@ Other useful function
 
 p, pp, length, size, these four functions could been used by any object.
 
-code:
+p is a print function. This function will add variable name as the
+title. code:
 
 ::
 
-    "jc".p()        # print: jc, just like print
-    "jc".pp()       # print: 'jc', just like pprint's pprint
-    [1,2].length()   # 2, just like len([1,2])
-    (1,2).size()        # 2, just like len((1,2))
+    value = "Minitest"
+    # add a title 'value : ' automatically.
+    value.p()                       # value : Minitest
+
+    # or you can give a string as title.
+    value.p("It is a value:")       # It is a value: Minitest
+
+    # if you don't want a title, use the parameter
+    value.p(auto_get_title=False)   # Minitest
+
+pp is another print function which will invoke the pprint.pprint
+function. Its parameters are just like the p. code:
+
+::
+
+    value = "Minitest"
+    value.pp()                      # value :
+                                    # 'Minitest'
+                                    
+    value.pp("It is a value:")      #  It is a value:
+                                    # 'Minitest'
+                                    
+    value.pp(auto_get_title=False)  # 'Minitest'
+
+length and size will invoke len function for the caller's object. code:
+
+::
+
+    [1,2].length()                  # 2, just like len([1,2])
+    (1,2).size()                    # 2, just like len((1,2))
 

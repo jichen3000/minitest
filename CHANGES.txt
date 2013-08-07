@@ -1,0 +1,21 @@
+Changes
+-------
+
+
+0.1.3 (2013-08-07)
+~~~~
+
+Add automatically adding a title for p and pp function.
+
+
+0.1.2 (2013-07-24)
+~~~~
+
+Add some useful functions, such as p, pp, size, length.
+Add parameter key for must_eqaul, and Deprecate the function must_equal_with_func.
+
+
+0.1.1 (2013-07-21)
+~~~~
+
+Initial public release on PyPI.

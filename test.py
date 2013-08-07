@@ -34,8 +34,13 @@ if __name__ == '__main__':
         with test("test must_raise"):
             (lambda : div_zero()).must_raise(ZeroDivisionError)
 
-        tself.jc.p()
-        tself.jc.pp()
+        value = "Minitest"
+        value.p()
+        value.p("It is a value:")
+        value.p(auto_get_title=False)
+        value.pp()
+        value.pp("It is a value:")
+        value.pp(auto_get_title=False)
         [1, 2].length().pp()
         (1, 2).size().pp()
 

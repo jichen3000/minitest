@@ -61,26 +61,32 @@ def gen_title_from_stack_info(stack_info):
 
 import traceback
 def p(self, title=None, auto_get_title=True):
+    result = self
+    if result == types.NoneType:
+        result = None
     if title:
-        print title, self
+        print title, result
     else:
         if auto_get_title:
             print gen_title_from_stack_info(
-                traceback.extract_stack()), self
+                traceback.extract_stack()), result
         else:
-            print self
-    return self
+            print result
+    return result
 
 from pprint import pprint
 def pp(self, title=None, auto_get_title=True):
+    result = self
+    if result == types.NoneType:
+        result = None
     if title:
         print title
     else:
         if auto_get_title:
             print gen_title_from_stack_info(
                 traceback.extract_stack())
-    pprint(self)
-    return self
+    pprint(result)
+    return result
 
 def length(self):
     return len(self)
@@ -96,6 +102,9 @@ def inject_musts_methods():
     set_method_to_object(pp)
     set_method_to_object(length)
     set_method_to_object(size)
+    # for None
+    set_method_to_builtin(types.NoneType, classmethod(p), 'p')
+    set_method_to_builtin(types.NoneType, classmethod(pp), 'pp')
 
 
 inject_musts_methods()

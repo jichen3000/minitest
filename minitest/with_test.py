@@ -187,6 +187,8 @@ if __name__ == '__main__':
         def __init__(name):
             self.name = name
 
+    None.p()
+    None.pp()
     tself.jc.p( )
     tself.jc.p(auto_get_title=False)
     tself.jc.p("jc would be:")

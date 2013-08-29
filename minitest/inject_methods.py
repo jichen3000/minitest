@@ -3,16 +3,15 @@ import inspect
 import operator
 
 from variables import *
+import types
 
-
-VERSION = '0.1.2'
 __all__ = []
 
-def get_dict(object):
+def get_dict(obj):
     _get_dict = ctypes.pythonapi._PyObject_GetDictPtr
     _get_dict.restype = ctypes.POINTER(ctypes.py_object)
     _get_dict.argtypes = [ctypes.py_object]
-    return _get_dict(object).contents.value
+    return _get_dict(obj).contents.value
 
 def set_method_to_builtin(clazz, method_func, method_name=None):
     method_name = method_name or method_func.func_code.co_name

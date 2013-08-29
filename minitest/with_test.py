@@ -33,7 +33,7 @@ class TestCase(object):
         set_current_test_case(self)
         return self
 
-    def __exit__(self, e_type, value, tb):
+    def __exit__(self, e_type=None, value=None, tb=None):
         self.end_time = datetime.now()
         if e_type != None:
             # print e_type
@@ -43,6 +43,15 @@ class TestCase(object):
         set_current_test_case(None)
         self.print_report()
         return self
+
+    @classmethod
+    def create(clz):
+        new_test_case = TestCase("test case")
+        new_test_case.__enter__()
+        import atexit
+        atexit.register(new_test_case.__exit__)
+        return new_test_case
+
 
     def add_test_method(self, test_method):
         self.test_methods.append(test_method)
@@ -111,11 +120,13 @@ class TestMethod(object):
 
     def __enter__(self):
         # print "test enter"
+        if not is_current_test_case():
+            TestCase.create()
         set_current_test_method(self)
         get_current_test_case().add_test_method(self)
         return self
 
-    def __exit__(self, e_type, value, tb):
+    def __exit__(self, e_type=None, value=None, tb=None):
         if e_type != None:
             # print e_type
             # print value
@@ -146,40 +157,42 @@ if __name__ == '__main__':
 
     import operator
 
-    # declare a test case
-    with test_case("new test case"):
-        # declare a variable for test
-        tself = get_test_self()
-        # you could put all your test variables on tself
-        # just like declare your variables on setup.
-        tself.jc = "jc"
+    # declare a variable for test
+    tself = get_test_self()
+    # you could put all your test variables on tself
+    # just like declare your variables on setup.
+    tself.jc = "jc"
 
-        # declare a test
-        with test("test must_equal"):
-            tself.jc.must_equal('jc')
+    # declare a test
+    with test("test must_equal"):
+        tself.jc.must_equal('jc')
 
-        with test("test must_true"):
-            True.must_true()
-            False.must_true()
+    with test("test must_true"):
+        True.must_true()
+        False.must_true()
 
-        # using a funcation to test equal.
-        with test("test must_equal_with_func"):
-            (1).must_equal(1, key=operator.eq)
-            (1).must_equal(2, key=operator.eq)
+    # using a funcation to test equal.
+    with test("test must_equal_with_func"):
+        (1).must_equal(1, key=operator.eq)
+        (1).must_equal(2, key=operator.eq)
 
-        def div_zero():
-            1/0
-            
-        # test excecption
-        with test("test must_raise"):
-            (lambda : div_zero()).must_raise(ZeroDivisionError)
+    def div_zero():
+        1/0
+        
+    # test excecption
+    with test("test must_raise"):
+        (lambda : div_zero()).must_raise(ZeroDivisionError)
 
-        tself.jc.p( )
-        tself.jc.p(auto_get_title=False)
-        tself.jc.p("jc would be:")
-        tself.jc.pp()
-        tself.jc.pp(auto_get_title=False)
-        tself.jc.pp("jc would be:")
-        [1, 2].length().pp()
-        (1, 2).size().pp()
+    class Person(object):
+        def __init__(name):
+            self.name = name
+
+    tself.jc.p( )
+    tself.jc.p(auto_get_title=False)
+    tself.jc.p("jc would be:")
+    tself.jc.pp()
+    tself.jc.pp(auto_get_title=False)
+    tself.jc.pp("jc would be:")
+    [1, 2].length().pp()
+    (1, 2).size().pp()
 

@@ -1,6 +1,10 @@
 Changes
 -------
 
+0.2.1 (2013-08-15)
+~~~~
+
+Now support simplly using test method without a test case.
 
 0.1.3 (2013-08-07)
 ~~~~

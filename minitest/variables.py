@@ -5,6 +5,8 @@ def get_minispec_vars():
         g_values['minispec_vars'] = {}
     return g_values['minispec_vars']
 
+def is_current_test_case():
+    return 'current_test_case' in get_minispec_vars()
 
 def get_current_test_case():
     return get_minispec_vars()['current_test_case']

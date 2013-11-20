@@ -69,6 +69,8 @@ code:
         # test exception
         with test("test must_raise"):
             (lambda : div_zero()).must_raise(ZeroDivisionError)
+            (lambda : div_zero()).must_raise(ZeroDivisionError, "integer division or modulo by zero")
+            (lambda : div_zero()).must_raise(ZeroDivisionError, "in")
 
 result:
 
@@ -94,7 +96,14 @@ result:
     -[2]
     #[1]
 
-    4 tests, 6 assertions, 2 failures, 0 errors.
+    3) Failure:
+    The line No is [/Users/Colin/work/minitest/minitest/with_test.py:186]:
+    --- expected
+    +++ actual
+    -['in']
+    #['integer division or modulo by zero']
+
+    4 tests, 8 assertions, 3 failures, 0 errors.
     [Finished in 0.1s]
 
 Other useful function

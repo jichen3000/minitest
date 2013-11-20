@@ -41,13 +41,16 @@ def must_equal_with_func(self, other, func):
 def must_true(self):
     return run_compare(self)
 
-def must_raise(self, raised_exception):
+def must_raise(self, raised_exception, exception_msg=None):
     if hasattr(self, '__call__'):
         try:
             result = self()
             return run_compare(None, raised_exception)
         except Exception, e:
-            return run_compare(type(e), raised_exception)
+            if type(e) == raised_exception and exception_msg != None:
+                return run_compare(str(e), exception_msg)
+            else:
+                return run_compare(type(e), raised_exception)
     else:
         "It must be a function."
 
@@ -62,7 +65,7 @@ def gen_title_from_stack_info(stack_info):
 import traceback
 def p(self, title=None, auto_get_title=True):
     result = self
-    if result == types.NoneType:
+    if type(result) == types.NoneType:
         result = None
     if title:
         print title, result
@@ -77,7 +80,7 @@ def p(self, title=None, auto_get_title=True):
 from pprint import pprint
 def pp(self, title=None, auto_get_title=True):
     result = self
-    if result == types.NoneType:
+    if type(result) == types.NoneType:
         result = None
     if title:
         print title

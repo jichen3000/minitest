@@ -31,6 +31,8 @@ if __name__ == '__main__':
     # test excecption
     with test("test must_raise"):
         (lambda : div_zero()).must_raise(ZeroDivisionError)
+        (lambda : div_zero()).must_raise(ZeroDivisionError, "integer division or modulo by zero")
+        (lambda : div_zero()).must_raise(ZeroDivisionError, "in")
 
     value = "Minitest"
     value.p()

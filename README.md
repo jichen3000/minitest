@@ -41,6 +41,7 @@ code:
         # declare a test
         with test("test must_equal"):
             tself.jc.must_equal('jc')
+            None.must_equal(None)
 
         with test("test must_true"):
             True.must_true()
@@ -64,34 +65,34 @@ result:
 
     Running tests:
 
-    .FF.
+    .FFF
 
-    Finished tests in 0.011786s.
+    Finished tests in 0.013165s.
 
     1) Failure:
-    The line No is [/Users/Colin/work/minitest/minitest/with_test.py:163]:
+    The line No is [/Users/Colin/work/minitest/minitest/with_test.py:174]:
     --- expected
     +++ actual
     -[True]
     #[False]
 
     2) Failure:
-    The line No is [/Users/Colin/work/minitest/minitest/with_test.py:168]:
+    The line No is [/Users/Colin/work/minitest/minitest/with_test.py:179]:
     --- expected
     +++ actual
     -[2]
     #[1]
 
     3) Failure:
-    The line No is [/Users/Colin/work/minitest/minitest/with_test.py:186]:
+    The line No is [/Users/Colin/work/minitest/minitest/with_test.py:188]:
     --- expected
     +++ actual
     -['in']
     #['integer division or modulo by zero']
 
-    4 tests, 8 assertions, 3 failures, 0 errors.
+    4 tests, 9 assertions, 3 failures, 0 errors.
     [Finished in 0.1s]
-    
+
 ### Other useful function
 
 p, pp, length, size, these four functions could been used by any object.

@@ -21,6 +21,8 @@ def set_method_to_object(method_func, method_name=None):
     set_method_to_builtin(object, method_func, method_name)
 
 def run_compare(actual, expected = True, func = operator.eq):
+    if actual == types.NoneType:
+        actual = None
     test_case = get_current_test_case()
     test_case.add_assertion()
     if not func(actual, expected):
@@ -65,8 +67,8 @@ def gen_title_from_stack_info(stack_info):
 import traceback
 def p(self, title=None, auto_get_title=True):
     result = self
-    if type(result) == types.NoneType:
-        result = None
+    # if type(result) == types.NoneType:
+    #     result = None
     if title:
         print title, result
     else:
@@ -101,6 +103,9 @@ def inject_musts_methods():
     [set_method_to_object(func) for name, func 
         in globals().iteritems() 
         if name.startswith('must_')]
+    [set_method_to_builtin(types.NoneType, classmethod(func), name) for name, func 
+        in globals().iteritems() 
+        if name.startswith('must_')]
     set_method_to_object(p)
     set_method_to_object(pp)
     set_method_to_object(length)
@@ -108,6 +113,7 @@ def inject_musts_methods():
     # for None
     set_method_to_builtin(types.NoneType, classmethod(p), 'p')
     set_method_to_builtin(types.NoneType, classmethod(pp), 'pp')
+    # set_method_to_builtin(types.NoneType, classmethod(must_equal), 'must_equal')
 
 
 inject_musts_methods()

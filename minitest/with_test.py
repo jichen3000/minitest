@@ -166,6 +166,8 @@ if __name__ == '__main__':
     # declare a test
     with test("test must_equal"):
         tself.jc.must_equal('jc')
+        None.must_equal(None)
+
 
     with test("test must_true"):
         True.must_true()
@@ -189,6 +191,7 @@ if __name__ == '__main__':
         def __init__(name):
             self.name = name
 
+    print "\nstart to show print results:"
     None.p()
     None.pp()
     tself.jc.p( )

@@ -15,6 +15,7 @@ if __name__ == '__main__':
     # declare a test
     with test("test must_equal"):
         tself.jc.must_equal('jc')
+        None.must_equal(None)
 
     with test("test must_true"):
         True.must_true()

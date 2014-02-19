@@ -22,7 +22,7 @@ Colin Ji <jichen3000@gmail.com>
 ### How to use
 install:
 
-    pip instsall minitest
+    pip install minitest
 
 code:
 

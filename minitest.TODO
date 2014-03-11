@@ -1,0 +1,1 @@
+ ☐ support to add method to partial the must_equal method. such as must_equal_for_array, it will replace calling arr.must_eqaul(arr1, allclose)

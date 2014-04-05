@@ -1,4 +1,11 @@
 # http://guide.python-distribute.org/creation.html
+# distribute to PyPI
+# Create your distribution
+# python setup.py sdist
+# Uploading your distribution file
+# python setup.py register # just run in first time.
+
+# python setup.py sdist upload
 
 if __name__ == '__main__':
     # import the minitest
@@ -34,6 +41,20 @@ if __name__ == '__main__':
         (lambda : div_zero()).must_raise(ZeroDivisionError)
         (lambda : div_zero()).must_raise(ZeroDivisionError, "integer division or modulo by zero")
         (lambda : div_zero()).must_raise(ZeroDivisionError, "in")
+
+    # customize your must method 
+    with test("inject_customized_must_method"):
+        def close_one(int1, int2):
+            return int1 == int2+1 or int2 == int1+1
+        (1).must_equal(2, close_one)
+        inject_customized_must_method(close_one)
+        (1).must_close_one(2)
+        inject_customized_must_method(close_one, 'must_close')
+        (1).must_close(2)
+
+        import numpy
+        inject_customized_must_method(numpy.allclose, 'must_close')
+        numpy.array([1]).must_close(numpy.array([1.0]))
 
     value = "Minitest"
     value.p()

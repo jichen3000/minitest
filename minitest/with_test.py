@@ -5,8 +5,9 @@ import pprint
 
 import inject_methods
 from variables import *
+import types
 
-__all__ = ['test', 'test_case', 'get_test_self']
+__all__ = ['test', 'test_case', 'get_test_self', 'inject_customized_must_method']
 
 class TestSelf(object):
     pass
@@ -151,7 +152,17 @@ def test_case(msg):
 def test(msg):
     return TestMethod(msg)
 
-
+def inject_customized_must_method(key_method, method_name=None, must_method=object.must_equal):
+    '''
+        Inject the customized method to object and NoneType.
+        and the customized must method's default name would be 'must_' plus the key_method's name.
+    '''
+    def method_func(self, other):
+        must_method(self, other, key=key_method)
+    method_name = method_name or 'must_'+key_method.func_code.co_name
+    inject_methods.set_method_to_object(method_func, method_name)
+    inject_methods.set_method_to_builtin(types.NoneType, method_func, method_name)
+    return method_func
 
 if __name__ == '__main__':
 
@@ -186,6 +197,17 @@ if __name__ == '__main__':
         (lambda : div_zero()).must_raise(ZeroDivisionError)
         (lambda : div_zero()).must_raise(ZeroDivisionError, "integer division or modulo by zero")
         (lambda : div_zero()).must_raise(ZeroDivisionError, "in")
+
+    # customize your must method 
+    with test("inject_customized_must_method"):
+        def close_one(int1, int2):
+            return int1 == int2+1 or int2 == int1+1
+        (1).must_equal(2, close_one)
+        inject_customized_must_method(close_one)
+        (1).must_close_one(2)
+        inject_customized_must_method(close_one, 'must_close')
+        (1).must_close(2)
+
 
     class Person(object):
         def __init__(name):

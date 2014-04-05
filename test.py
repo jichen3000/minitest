@@ -52,9 +52,9 @@ if __name__ == '__main__':
         inject_customized_must_method(close_one, 'must_close')
         (1).must_close(2)
 
-        import numpy
-        inject_customized_must_method(numpy.allclose, 'must_close')
-        numpy.array([1]).must_close(numpy.array([1.0]))
+        # import numpy
+        # inject_customized_must_method(numpy.allclose, 'must_close')
+        # numpy.array([1]).must_close(numpy.array([1.0]))
 
     value = "Minitest"
     value.p()

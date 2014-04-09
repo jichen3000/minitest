@@ -12,7 +12,7 @@ And some other useful functions:
 
 ::
 
-    p, pp, length, size, inject_customized_must_method.
+    p, pp, length, size, inject.
 
 github: https://github.com/jichen3000/minitest
 
@@ -148,20 +148,22 @@ length and size will invoke len function for the caller's object. code:
     [1,2].length()                  # 2, just like len([1,2])
     (1,2).size()                    # 2, just like len((1,2))
 
-inject\_customized\_must\_method will inject the method which you
-customize. Why do I make this method? Since in many case I will use
-numpy array. When it comes to comparing two numpy array, I have to use:
+inject\_customized\_must\_method or inject function will inject the
+function which you customize. Why do I make this function? Since in many
+case I will use numpy array. When it comes to comparing two numpy array,
+I have to use:
 
 ::
 
     import numpy
     numpy.array([1]).must_equal(numpy.array([1.0]), numpy.allclose)
 
-For being convient, I use inject\_customized\_must\_method like:
+For being convient, I use inject\_customized\_must\_method or inject
+function like:
 
 ::
 
     import numpy
-    inject_customized_must_method(numpy.allclose, 'must_close')
+    inject(numpy.allclose, 'must_close')
     numpy.array([1]).must_close(numpy.array([1.0]))
 

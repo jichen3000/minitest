@@ -43,17 +43,17 @@ if __name__ == '__main__':
         (lambda : div_zero()).must_raise(ZeroDivisionError, "in")
 
     # customize your must method 
-    with test("inject_customized_must_method"):
+    with test("inject"):
         def close_one(int1, int2):
             return int1 == int2+1 or int2 == int1+1
         (1).must_equal(2, close_one)
-        inject_customized_must_method(close_one)
+        inject(close_one)
         (1).must_close_one(2)
         inject_customized_must_method(close_one, 'must_close')
         (1).must_close(2)
 
         # import numpy
-        # inject_customized_must_method(numpy.allclose, 'must_close')
+        # inject(numpy.allclose, 'must_close')
         # numpy.array([1]).must_close(numpy.array([1.0]))
 
     value = "Minitest"

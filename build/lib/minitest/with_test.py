@@ -7,7 +7,7 @@ import inject_methods
 from variables import *
 import types
 
-__all__ = ['test', 'test_case', 'get_test_self', 'inject_customized_must_method']
+__all__ = ['test', 'test_case', 'get_test_self', 'inject', 'inject_customized_must_method']
 
 class TestSelf(object):
     pass
@@ -164,6 +164,8 @@ def inject_customized_must_method(key_method, method_name=None, must_method=obje
     inject_methods.set_method_to_builtin(types.NoneType, method_func, method_name)
     return method_func
 
+inject = inject_customized_must_method
+
 if __name__ == '__main__':
 
     import operator
@@ -199,13 +201,13 @@ if __name__ == '__main__':
         (lambda : div_zero()).must_raise(ZeroDivisionError, "in")
 
     # customize your must method 
-    with test("inject_customized_must_method"):
+    with test("inject"):
         def close_one(int1, int2):
             return int1 == int2+1 or int2 == int1+1
         (1).must_equal(2, close_one)
-        inject_customized_must_method(close_one)
+        inject(close_one)
         (1).must_close_one(2)
-        inject_customized_must_method(close_one, 'must_close')
+        inject(close_one, 'must_close')
         (1).must_close(2)
 
 

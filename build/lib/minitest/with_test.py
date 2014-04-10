@@ -186,6 +186,10 @@ if __name__ == '__main__':
         True.must_true()
         False.must_true()
 
+    with test("test must_false"):
+        True.must_false()
+        False.must_false()
+
     # using a funcation to test equal.
     with test("test must_equal_with_func"):
         (1).must_equal(1, key=operator.eq)

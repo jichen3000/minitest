@@ -48,6 +48,9 @@ def must_equal_with_func(self, other, func):
 def must_true(self):
     return run_compare(self)
 
+def must_false(self):
+    return run_compare(self, expected = False)
+
 def must_raise(self, raised_exception, exception_msg=None):
     if hasattr(self, '__call__'):
         try:

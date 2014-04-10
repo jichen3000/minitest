@@ -6,7 +6,7 @@ some methods including:
 
 ::
 
-    must_equal, must_true, must_raise.
+    must_equal, must_true, must_false, must_raise.
 
 And some other useful functions:
 
@@ -59,6 +59,10 @@ code:
             True.must_true()
             False.must_true()
 
+        with test("test must_false"):
+            True.must_false()
+            False.must_false()
+
         # using a funcation to test equal.
         with test("test must_equal_with_func"):
             (1).must_equal(1, key=operator.eq)
@@ -79,32 +83,39 @@ result:
 
     Running tests:
 
-    .FFF
+    .FFFF.
 
     Finished tests in 0.013165s.
 
     1) Failure:
-    The line No is [/Users/Colin/work/minitest/minitest/with_test.py:174]:
+    The line No is [/Users/Colin/work/minitest/minitest/with_test.py:187]:
     --- expected
     +++ actual
     -[True]
     #[False]
 
     2) Failure:
-    The line No is [/Users/Colin/work/minitest/minitest/with_test.py:179]:
+    The line No is [/Users/Colin/work/minitest/minitest/with_test.py:190]:
+    --- expected
+    +++ actual
+    -[False]
+    #[True]
+
+    3) Failure:
+    The line No is [/Users/Colin/work/minitest/minitest/with_test.py:196]:
     --- expected
     +++ actual
     -[2]
     #[1]
 
-    3) Failure:
-    The line No is [/Users/Colin/work/minitest/minitest/with_test.py:188]:
+    4) Failure:
+    The line No is [/Users/Colin/work/minitest/minitest/with_test.py:205]:
     --- expected
     +++ actual
     -['in']
     #['integer division or modulo by zero']
 
-    4 tests, 9 assertions, 3 failures, 0 errors.
+    6 tests, 14 assertions, 4 failures, 0 errors.
     [Finished in 0.1s]
 
 Other useful function

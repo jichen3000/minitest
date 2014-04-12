@@ -151,35 +151,46 @@ function. Its parameters are just like the p. code:
 
 pl is another print function which will print the file path and line NO.
 And some editors support to go to the line of that file, such as
-Sublime2. Its parameters are just like the p. code:
+Sublime2. Its parameters are just like the p. Notice, it will print new
+line firstly, since in some case, there will be other string before file
+path, which cause some editor cannot jump to the location.
+
+code:
 
 ::
 
     value = "Minitest"
-    value.pl()                      #     File "/Users/Colin/work/minitest/test.py", line 72
+    value.pl()                      #     
+                                    #     File "/Users/Colin/work/minitest/test.py", line 72
                                     # value : Minitest
                                     
-    value.pl("It is a value:")      #     File "/Users/Colin/work/minitest/test.py", line 73
+    value.pl("It is a value:")      #     
+                                    #     File "/Users/Colin/work/minitest/test.py", line 73
                                     #  It is a value: Minitest
                                     
-    value.pl(auto_get_title=False)  #     File "/Users/Colin/work/minitest/test.py", line 74
+    value.pl(auto_get_title=False)  #     
+                                    #     File "/Users/Colin/work/minitest/test.py", line 74
                                     # Minitest
 
 ppl is another print function which will print the file path and line
-NO. It almost like pl except print value in another new line. code:
+NO. It almost like pl except print value in another new line. Notice, it
+will print new line firstly. code:
 
 ::
 
     value = "Minitest"
-    value.ppl()                     #     File "/Users/Colin/work/minitest/test.py", line 76
+    value.ppl()                     #     
+                                    #     File "/Users/Colin/work/minitest/test.py", line 76
                                     # value :
                                     # 'Minitest'
                                     
-    value.ppl("It is a value:")     #     File "/Users/Colin/work/minitest/test.py", line 77
+    value.ppl("It is a value:")     #     
+                                    #     File "/Users/Colin/work/minitest/test.py", line 77
                                     #  It is a value:
                                     # 'Minitest'
                                     
-    value.ppl(auto_get_title=False) #     File "/Users/Colin/work/minitest/test.py", line 78
+    value.ppl(auto_get_title=False) #     
+                                    #     File "/Users/Colin/work/minitest/test.py", line 78
                                     # 'Minitest'
 
 length and size will invoke len function for the caller's object. code:

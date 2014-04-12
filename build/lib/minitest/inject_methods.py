@@ -31,10 +31,9 @@ def run_compare(actual, expected = True, func = operator.eq):
     test_case = get_current_test_case()
     test_case.add_assertion()
     if not func(actual, expected):
-        # print 'false'
-        file_info = inspect.getouterframes(inspect.currentframe())[2]
+        frame = inspect.getouterframes(inspect.currentframe())[-1]
         test_case.add_failure(actual = actual, expected = expected, 
-            file_info = file_info[1]+":"+str(file_info[2]))
+            frame = frame)
         get_current_test_method().set_failed()
     return actual
 
@@ -87,11 +86,55 @@ def p(self, title=None, auto_get_title=True):
             print result
     return result
 
+def gen_line_info(frame):
+    '''
+        the parameter 'frame' will like:
+        (<frame object at 0x7fb521c7c8e0>,
+         '/Users/Colin/work/minitest/minitest/with_test.py',
+         233,
+         '<module>',
+         ['    tself.jc.ppl()\n'],
+         0)
+    '''
+    return 'File "%s", line %d, in %s:' % (frame[1], frame[2], frame[3])
+
+
 from pprint import pprint
 def pp(self, title=None, auto_get_title=True):
     result = self
-    if type(result) == types.NoneType:
-        result = None
+    # if type(result) == types.NoneType:
+    #     result = None
+    if title:
+        print title
+    else:
+        if auto_get_title:
+            print gen_title_from_stack_info(
+                traceback.extract_stack())
+    pprint(result)
+    return result
+
+def pl(self, title=None, auto_get_title=True):
+    ''' p with line information including file full path and line number.'''
+    result = self
+    current_frame = inspect.getouterframes(inspect.currentframe())[-1]
+    print('    '+gen_line_info(current_frame))
+
+    if title:
+        print title, result
+    else:
+        if auto_get_title:
+            print gen_title_from_stack_info(
+                traceback.extract_stack()), result
+        else:
+            print result
+    return result
+
+def ppl(self, title=None, auto_get_title=True):
+    ''' pp with line information including file full path and line number.'''
+    result = self
+    current_frame = inspect.getouterframes(inspect.currentframe())[-1]
+    print('    '+gen_line_info(current_frame))
+
     if title:
         print title
     else:
@@ -116,11 +159,15 @@ def inject_musts_methods():
         if name.startswith('must_')]
     set_method_to_object(p)
     set_method_to_object(pp)
+    set_method_to_object(pl)
+    set_method_to_object(ppl)
     set_method_to_object(length)
     set_method_to_object(size)
     # for None
     set_method_to_builtin(types.NoneType, classmethod(p), 'p')
     set_method_to_builtin(types.NoneType, classmethod(pp), 'pp')
+    set_method_to_builtin(types.NoneType, classmethod(pl), 'pl')
+    set_method_to_builtin(types.NoneType, classmethod(ppl), 'ppl')
     # set_method_to_builtin(types.NoneType, classmethod(must_equal), 'must_equal')
 
 

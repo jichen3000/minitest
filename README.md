@@ -6,7 +6,7 @@ This project is inspired by Ruby minispec, but now it just implement some method
     
 And some other useful functions:
 
-	p, pp, ppl, length, size, inject.
+	p, pp, pl, ppl, length, size, inject.
 
 github: [https://github.com/jichen3000/minitest](https://github.com/jichen3000/minitest)
 
@@ -74,39 +74,35 @@ result:
     Finished tests in 0.013165s.
 
     1) Failure:
-    The line No is [/Users/Colin/work/minitest/minitest/with_test.py:187]:
-    --- expected
-    +++ actual
-    -[True]
-    #[False]
+    File "/Users/Colin/work/minitest/test.py", line 29, in <module>:
+    EXPECTED: True
+      ACTUAL: False
+
 
     2) Failure:
-    The line No is [/Users/Colin/work/minitest/minitest/with_test.py:190]:
-    --- expected
-    +++ actual
-    -[False]
-    #[True]
+    File "/Users/Colin/work/minitest/test.py", line 32, in <module>:
+    EXPECTED: False
+      ACTUAL: True
+
 
     3) Failure:
-    The line No is [/Users/Colin/work/minitest/minitest/with_test.py:196]:
-    --- expected
-    +++ actual
-    -[2]
-    #[1]
+    File "/Users/Colin/work/minitest/test.py", line 38, in <module>:
+    EXPECTED: 2
+      ACTUAL: 1
+
 
     4) Failure:
-    The line No is [/Users/Colin/work/minitest/minitest/with_test.py:205]:
-    --- expected
-    +++ actual
-    -['in']
-    #['integer division or modulo by zero']
+    File "/Users/Colin/work/minitest/test.py", line 47, in <module>:
+    EXPECTED: 'in'
+      ACTUAL: 'integer division or modulo by zero'
+
 
     6 tests, 14 assertions, 4 failures, 0 errors.
     [Finished in 0.1s]
 
 ### Other useful function
 
-p, pp, length, size, these four functions could been used by any object.
+p, pp, pl, ppl, length, size, these four functions could been used by any object.
     
 p is a print function. This function will add variable name as the title.
 code:
@@ -134,21 +130,35 @@ code:
                                     
     value.pp(auto_get_title=False)  # 'Minitest'
     
-ppl is another print function which will print the file path and line NO.
+pl is another print function which will print the file path and line NO.
 And some editors support to go to the line of that file, such as Sublime2.
 Its parameters are just like the p.
 code:
     
     value = "Minitest"
-    value.ppl()                     #     File "/your_local_path/minitest/test.py", line 70
+    value.pl()                      #     File "/Users/Colin/work/minitest/test.py", line 72
+                                    # value : Minitest
+                                    
+    value.pl("It is a value:")      #     File "/Users/Colin/work/minitest/test.py", line 73
+                                    #  It is a value: Minitest
+                                    
+    value.pl(auto_get_title=False)  #     File "/Users/Colin/work/minitest/test.py", line 74
+                                    # Minitest
+    
+ppl is another print function which will print the file path and line NO.
+It almost like pl except print value in another new line.
+code:
+    
+    value = "Minitest"
+    value.ppl()                     #     File "/Users/Colin/work/minitest/test.py", line 76
                                     # value :
                                     # 'Minitest'
                                     
-    value.ppl("It is a value:")     #     File "/your_local_path/minitest/test.py", line 71
+    value.ppl("It is a value:")     #     File "/Users/Colin/work/minitest/test.py", line 77
                                     #  It is a value:
                                     # 'Minitest'
                                     
-    value.ppl(auto_get_title=False) #     File "/your_local_path/minitest/test.py", line 72
+    value.ppl(auto_get_title=False) #     File "/Users/Colin/work/minitest/test.py", line 78
                                     # 'Minitest'
     
 length and size will invoke len function for the caller's object.

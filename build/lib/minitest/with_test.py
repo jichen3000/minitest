@@ -16,10 +16,20 @@ def get_test_self():
     return TestSelf()
 
 class TestFailure(object):
-    def __init__(self, actual, expected, file_info):
+    def __init__(self, actual, expected, frame):
         self.actual = actual
         self.expected = expected
-        self.file_info = file_info
+        self.frame = frame
+
+    def __str__(self):
+        result = inject_methods.gen_line_info(self.frame) + "\n"
+        result += "EXPECTED: %s\n" % pprint.pformat(self.expected)
+        result += "  ACTUAL: %s\n"  % pprint.pformat(self.actual)
+        return result
+
+    def __repr__(self):
+        return self.__str__()
+
 
 class TestCase(object):
     def __init__(self, msg=None):
@@ -61,8 +71,8 @@ class TestCase(object):
     def add_assertion(self):
         self.assertion_count += 1
 
-    def add_failure(self, actual=None, expected=None, file_info=None):
-        self.failures.append(TestFailure(actual, expected, file_info))
+    def add_failure(self, actual, expected, frame):
+        self.failures.append(TestFailure(actual, expected, frame))
 
     def print_report(self):
         pass_seconds = (self.end_time - self.start_time).total_seconds()
@@ -76,11 +86,12 @@ class TestCase(object):
         
     def print_failure(self, index, failure):
         print "%d) Failure:" % (index+1)
-        print "The line No is [%s]:" % failure.file_info
-        print "--- expected"
-        print "+++ actual"
-        print "-[%s]" % pprint.pformat(failure.expected)
-        print "#[%s]" % pprint.pformat(failure.actual)
+        print failure
+        # print 'File "%s", line %d:' % (failure.file_path, failure.line_no)
+        # print "EXPECTED: %s" % pprint.pformat(failure.expected)
+        # print "  ACTUAL: %s"  % pprint.pformat(failure.actual)
+        # print "-[%s]" % pprint.pformat(failure.expected)
+        # print "#[%s]" % pprint.pformat(failure.actual)
         print
         return True
 
@@ -222,12 +233,14 @@ if __name__ == '__main__':
     print "\nstart to show print results:"
     None.p()
     None.pp()
-    tself.jc.p( )
+    tself.jc.p()
     tself.jc.p(auto_get_title=False)
     tself.jc.p("jc would be:")
     tself.jc.pp()
     tself.jc.pp(auto_get_title=False)
     tself.jc.pp("jc would be:")
+    tself.jc.pl()
+    tself.jc.ppl()
     [1, 2].length().pp()
     (1, 2).size().pp()
 

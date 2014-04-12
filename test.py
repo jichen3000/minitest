@@ -7,6 +7,12 @@
 
 # python setup.py sdist upload
 
+def test_pl():
+    'test_pl'.pl()
+
+def test_ppl():
+    'test_ppl'.ppl()
+
 if __name__ == '__main__':
     # import the minitest
     from minitest import *
@@ -24,9 +30,16 @@ if __name__ == '__main__':
         tself.jc.must_equal('jc')
         None.must_equal(None)
 
+    with test("test_pl"):
+        test_pl()
+
+
     with test("test must_true"):
         True.must_true()
         False.must_true()
+
+    with test("test_ppl"):
+        test_ppl()
 
     with test("test must_false"):
         True.must_false()

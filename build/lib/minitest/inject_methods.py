@@ -31,7 +31,7 @@ def run_compare(actual, expected = True, func = operator.eq):
     test_case = get_current_test_case()
     test_case.add_assertion()
     if not func(actual, expected):
-        frame = inspect.getouterframes(inspect.currentframe())[-1]
+        frame = inspect.getouterframes(inspect.currentframe())[2]
         test_case.add_failure(actual = actual, expected = expected, 
             frame = frame)
         get_current_test_method().set_failed()
@@ -114,10 +114,14 @@ def pp(self, title=None, auto_get_title=True):
     return result
 
 def pl(self, title=None, auto_get_title=True):
-    ''' p with line information including file full path and line number.'''
+    ''' p with line information including file full path and line number.
+        Notice, it will print new line firstly, since in some case, 
+        there will be other string before file path
+        and some editor cannot jump to the location.
+    '''
     result = self
-    current_frame = inspect.getouterframes(inspect.currentframe())[-1]
-    print('    '+gen_line_info(current_frame))
+    current_frame = inspect.getouterframes(inspect.currentframe())[1]
+    print('\n    '+gen_line_info(current_frame))
 
     if title:
         print title, result
@@ -130,10 +134,14 @@ def pl(self, title=None, auto_get_title=True):
     return result
 
 def ppl(self, title=None, auto_get_title=True):
-    ''' pp with line information including file full path and line number.'''
+    ''' pp with line information including file full path and line number.
+        Notice, it will print new line firstly, since in some case, 
+        there will be other string before file path
+        and some editor cannot jump to the location.
+    '''
     result = self
-    current_frame = inspect.getouterframes(inspect.currentframe())[-1]
-    print('    '+gen_line_info(current_frame))
+    current_frame = inspect.getouterframes(inspect.currentframe())[1]
+    print('\n    '+gen_line_info(current_frame))
 
     if title:
         print title

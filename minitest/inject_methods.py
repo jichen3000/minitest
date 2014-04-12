@@ -31,10 +31,9 @@ def run_compare(actual, expected = True, func = operator.eq):
     test_case = get_current_test_case()
     test_case.add_assertion()
     if not func(actual, expected):
-        # print 'false'
         file_info = inspect.getouterframes(inspect.currentframe())[2]
         test_case.add_failure(actual = actual, expected = expected, 
-            file_info = file_info[1]+":"+str(file_info[2]))
+            file_path = file_info[1], line_no = file_info[2])
         get_current_test_method().set_failed()
     return actual
 
@@ -90,8 +89,26 @@ def p(self, title=None, auto_get_title=True):
 from pprint import pprint
 def pp(self, title=None, auto_get_title=True):
     result = self
-    if type(result) == types.NoneType:
-        result = None
+    # if type(result) == types.NoneType:
+    #     result = None
+    if title:
+        print title
+    else:
+        if auto_get_title:
+            print gen_title_from_stack_info(
+                traceback.extract_stack())
+    pprint(result)
+    return result
+
+def ppl(self, title=None, auto_get_title=True):
+    ''' pp with line information including file full path and line number.'''
+    result = self
+    # inspect.getouterframes(inspect.currentframe()).pp()
+    file_info = inspect.getouterframes(inspect.currentframe())[-1]
+    # line_info = file_info[1]+":"+str(file_info[2])
+    line_info = '    File "%s", line %d' % (file_info[1], file_info[2])
+    print(line_info)
+    # print('File "/Users/Colin/work/minitest/minitest/with_test.py", line 232')
     if title:
         print title
     else:
@@ -116,11 +133,13 @@ def inject_musts_methods():
         if name.startswith('must_')]
     set_method_to_object(p)
     set_method_to_object(pp)
+    set_method_to_object(ppl)
     set_method_to_object(length)
     set_method_to_object(size)
     # for None
     set_method_to_builtin(types.NoneType, classmethod(p), 'p')
     set_method_to_builtin(types.NoneType, classmethod(pp), 'pp')
+    set_method_to_builtin(types.NoneType, classmethod(ppl), 'ppl')
     # set_method_to_builtin(types.NoneType, classmethod(must_equal), 'must_equal')
 
 

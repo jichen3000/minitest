@@ -1,5 +1,5 @@
- ☐ add method pp_line which is the pp with showing the line NO, and its alia name will be ppl
 
 ＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿
 Archive:
+ ✔ add method pp_line which is the pp with showing the line NO, and its alia name will be ppl @done (14-04-12 11:53)
  ✔ support to add method to partial the must_equal method. such as must_equal_for_array, it will replace calling arr.must_eqaul(arr1, allclose) @done (14-04-05 09:17)

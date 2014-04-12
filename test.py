@@ -67,6 +67,9 @@ if __name__ == '__main__':
     value.pp()
     value.pp("It is a value:")
     value.pp(auto_get_title=False)
+    value.ppl()
+    value.ppl("It is a value:")
+    value.ppl(auto_get_title=False)
     [1, 2].length().pp()
     (1, 2).size().pp()
 

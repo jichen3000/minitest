@@ -1,14 +1,10 @@
-import pandoc
-import os
+import pypandoc
 
 def convert_readme():
-    pandoc.core.PANDOC_PATH = '/usr/local/bin/pandoc'
+    output = pypandoc.convert('README.md', 'rst')
+    with open('README.txt','w+') as the_file:
+        the_file.write(output)
 
-    doc = pandoc.Document()
-    doc.markdown = open('README.md').read()
-    f = open('README.txt','w+')
-    f.write(doc.rst)
-    f.close()
 
 if __name__ == '__main__':
     convert_readme()

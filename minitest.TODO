@@ -1,5 +1,10 @@
-＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿
-Archive:
+ ☐ only run, just only run one test, and others will be ignored.
+ ☐ support python 3
+
+
+
+ Archive:
+ ✔ fix the issue, when using the must_close and if it report error, the file name will wrong. @done (14-07-05 11:58)
  ✔ let 'test' method support function as parameter @done (14-05-06 16:52)
  ✔ add method pp_line which is the pp with showing the line NO, and its alia name will be ppl @done (14-04-12 11:53)
  ✔ support to add method to partial the must_equal method. such as must_equal_for_array, it will replace calling arr.must_eqaul(arr1, allclose) @done (14-04-05 09:17)

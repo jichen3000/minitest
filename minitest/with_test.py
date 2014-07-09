@@ -1,3 +1,7 @@
+'''
+    see the atexit.register about how to check if the code is end
+''' 
+
 import sys
 import traceback
 from datetime import datetime
@@ -223,6 +227,11 @@ if __name__ == '__main__':
         (1).must_close_one(2)
         inject(close_one, 'must_close')
         (1).must_close(2)
+
+    with test("check file name in false status"):
+        (1).must_equal(10)
+        (1).must_equal(10, close_one)
+        (1).must_close(10)
 
 
     class Person(object):

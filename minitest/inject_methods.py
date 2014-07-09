@@ -31,7 +31,7 @@ def run_compare(actual, expected = True, func = operator.eq):
     test_case = get_current_test_case()
     test_case.add_assertion()
     if not func(actual, expected):
-        frame = inspect.getouterframes(inspect.currentframe())[2]
+        frame = inspect.getouterframes(inspect.currentframe())[-1]
         test_case.add_failure(actual = actual, expected = expected, 
             frame = frame)
         get_current_test_method().set_failed()

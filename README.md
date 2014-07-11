@@ -6,7 +6,7 @@ This project is inspired by Ruby minispec, but now it just implement some method
     
 And some other useful functions:
 
-	p, pp, pl, ppl, length, size, inject.
+	p, pp, pl, ppl, length, size, inject, flag_test
 
 github: [https://github.com/jichen3000/minitest](https://github.com/jichen3000/minitest)
 
@@ -189,4 +189,17 @@ For being convient, I use inject_customized_must_method or inject function like:
     import numpy
     inject(numpy.allclose, 'must_close')
     numpy.array([1]).must_close(numpy.array([1.0]))
-    
+
+flag_test will print a message 'This place have codes for test!' with the file path, file NO.
+code:
+    flag_test()
+
+    # print like:
+        File "/Users/colin/work/minitest/test.py", line 97, in <module>:
+    This place have codes for test!    
+
+    flag_test("for test")  # add a title
+
+    # print like:
+        File "/Users/colin/work/minitest/test.py", line 101, in <module>:
+    for test: This place have codes for test!    

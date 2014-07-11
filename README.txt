@@ -12,7 +12,7 @@ And some other useful functions:
 
 ::
 
-    p, pp, pl, ppl, length, size, inject.
+    p, pp, pl, ppl, length, size, inject, flag_test
 
 github: https://github.com/jichen3000/minitest
 
@@ -219,4 +219,19 @@ function like:
     import numpy
     inject(numpy.allclose, 'must_close')
     numpy.array([1]).must_close(numpy.array([1.0]))
+
+flag\_test will print a message 'This place have codes for test!' with
+the file path, file NO. code: flag\_test()
+
+::
+
+    # print like:
+        File "/Users/colin/work/minitest/test.py", line 97, in <module>:
+    This place have codes for test!    
+
+    flag_test("for test")  # add a title
+
+    # print like:
+        File "/Users/colin/work/minitest/test.py", line 101, in <module>:
+    for test: This place have codes for test!    
 

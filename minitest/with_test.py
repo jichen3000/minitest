@@ -11,7 +11,7 @@ import inject_methods
 from variables import *
 import types
 
-__all__ = ['test', 'test_case', 'get_test_self', 'inject', 'inject_customized_must_method']
+__all__ = ['test', 'test_case', 'get_test_self', 'inject', 'inject_customized_must_method', 'flag_test']
 
 class TestSelf(object):
     pass
@@ -234,6 +234,7 @@ if __name__ == '__main__':
         (1).must_close(10)
 
 
+
     class Person(object):
         def __init__(name):
             self.name = name
@@ -251,4 +252,5 @@ if __name__ == '__main__':
     tself.jc.ppl()
     [1, 2].length().pp()
     (1, 2).size().pp()
+    flag_test()
 

@@ -158,6 +158,22 @@ def length(self):
 def size(self):
     return len(self)
 
+def flag_test_func(title=None):
+    ''' p with line information including file full path and line number.
+        Notice, it will print new line firstly, since in some case, 
+        there will be other string before file path
+        and some editor cannot jump to the location.
+    '''
+    msg = 'This place have codes for test!'
+    current_frame = inspect.getouterframes(inspect.currentframe())[1]
+    print('\n    '+gen_line_info(current_frame))
+
+    if title:
+        print title+":", msg
+    else:
+        print msg
+    return True
+
 def inject_musts_methods():
     [set_method_to_object(func) for name, func 
         in globals().iteritems() 
@@ -178,6 +194,8 @@ def inject_musts_methods():
     set_method_to_builtin(types.NoneType, classmethod(ppl), 'ppl')
     # set_method_to_builtin(types.NoneType, classmethod(must_equal), 'must_equal')
 
+    import __builtin__
+    __builtin__.flag_test = flag_test_func
 
 inject_musts_methods()
 

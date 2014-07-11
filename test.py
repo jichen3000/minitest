@@ -13,6 +13,9 @@ def test_pl():
 def test_ppl():
     'test_ppl'.ppl()
 
+def test_flag_test():
+    flag_test()
+
 if __name__ == '__main__':
     # import the minitest
     from minitest import *
@@ -72,7 +75,10 @@ if __name__ == '__main__':
     with test("test_ppl"):
         test_ppl()
 
-
+    with test(flag_test):
+        import sub_test_module
+        sub_test_module.test_flag_test()
+        flag_test("for test")
 
     value = "Minitest"
     value.p()

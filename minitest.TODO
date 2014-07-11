@@ -1,6 +1,8 @@
  ☐ only run, just only run one test, and others will be ignored.
  ☐ support python 3
-
+ ☐ must_equal could support user message, when it fails.
+ ☐ issue: sometimes, some object don't have pp or size methods which should have been injected to.
+ 
 
 
  Archive:

@@ -1,6 +1,11 @@
 Changes
 -------
 
+1.5.0 (2014-07-18)
+~~~~
+
+must functions support failure_msg argument.
+
 1.4.0 (2014-07-11)
 ~~~~
 

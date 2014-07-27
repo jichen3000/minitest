@@ -66,6 +66,22 @@ code:
             (lambda : div_zero()).must_raise(ZeroDivisionError, "integer division or modulo by zero")
             (lambda : div_zero()).must_raise(ZeroDivisionError, "in")
 
+        # when assertion fails, it will show the failure_msg
+        with test("with failure_msg"):
+            the_number = 10
+            (the_number % 2).must_equal(1, 
+                failure_msg="{0} is the number".format(the_number))
+            # it wont show the failure_msg
+            (the_number % 2).must_equal(0, 
+                failure_msg="{0} is the number".format(the_number))
+
+            (True).must_false(
+                failure_msg="{0} is the number".format(the_number))
+
+            (lambda : div_zero()).must_raise(ZeroDivisionError, "in",
+                failure_msg="{0} is the number".format(the_number))
+
+
 result:
 
     Running tests:
@@ -98,7 +114,28 @@ result:
       ACTUAL: 'integer division or modulo by zero'
 
 
-    6 tests, 14 assertions, 4 failures, 0 errors.
+    5) Failure:
+    File "/Users/colin/work/minitest/test.py", line 86, in <module>:
+     MESSAGE: '10 is the number'
+    EXPECTED: 1
+      ACTUAL: 0
+
+
+    6) Failure:
+    File "/Users/colin/work/minitest/test.py", line 92, in <module>:
+     MESSAGE: '10 is the number'
+    EXPECTED: False
+      ACTUAL: True
+
+
+    7) Failure:
+    File "/Users/colin/work/minitest/test.py", line 95, in <module>:
+     MESSAGE: '10 is the number'
+    EXPECTED: 'in'
+      ACTUAL: 'integer division or modulo by zero'
+
+
+    10 tests, 18 assertions, 7 failures, 0 errors.
     [Finished in 0.1s]
 
 ### Other useful function
@@ -192,6 +229,7 @@ For being convient, I use inject_customized_must_method or inject function like:
 
 flag_test will print a message 'This place have codes for test!' with the file path, file NO.
 code:
+
     flag_test()
 
     # print like:

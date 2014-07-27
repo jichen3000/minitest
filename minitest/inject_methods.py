@@ -5,6 +5,8 @@ import operator
 from variables import *
 import types
 
+import __builtin__
+
 __all__ = []
 
 def get_dict(obj):
@@ -20,7 +22,8 @@ def set_method_to_builtin(clazz, method_func, method_name=None):
 def set_method_to_object(method_func, method_name=None):
     set_method_to_builtin(object, method_func, method_name)
 
-def run_compare(actual, expected = True, func = operator.eq):
+def run_compare(actual, expected = True, func = operator.eq,
+        failure_msg=None):
 
     try:            
         if actual == types.NoneType:
@@ -33,33 +36,33 @@ def run_compare(actual, expected = True, func = operator.eq):
     if not func(actual, expected):
         frame = inspect.getouterframes(inspect.currentframe())[-1]
         test_case.add_failure(actual = actual, expected = expected, 
-            frame = frame)
+            frame = frame, failure_msg = failure_msg)
         get_current_test_method().set_failed()
     return actual
 
-def must_equal(self, other, key=operator.eq):
-    return run_compare(self, other, key)
+def must_equal(self, other, key=operator.eq, failure_msg=None):
+    return run_compare(self, other, key, failure_msg=failure_msg)
 
-def must_equal_with_func(self, other, func):
+def must_equal_with_func(self, other, func, failure_msg=None):
     ''' deprecated, now just use must_equal's key parameter '''
-    return run_compare(self, other, func)
+    return run_compare(self, other, func, failure_msg=failure_msg)
 
-def must_true(self):
-    return run_compare(self)
+def must_true(self, failure_msg=None):
+    return run_compare(self, failure_msg=failure_msg)
 
-def must_false(self):
-    return run_compare(self, expected = False)
+def must_false(self, failure_msg=None):
+    return run_compare(self, expected = False, failure_msg=failure_msg)
 
-def must_raise(self, raised_exception, exception_msg=None):
+def must_raise(self, raised_exception, exception_msg=None, failure_msg=None):
     if hasattr(self, '__call__'):
         try:
             result = self()
-            return run_compare(None, raised_exception)
+            return run_compare(None, raised_exception, failure_msg=failure_msg)
         except Exception, e:
             if type(e) == raised_exception and exception_msg != None:
-                return run_compare(str(e), exception_msg)
+                return run_compare(str(e), exception_msg, failure_msg=failure_msg)
             else:
-                return run_compare(type(e), raised_exception)
+                return run_compare(type(e), raised_exception, failure_msg=failure_msg)
     else:
         "It must be a function."
 
@@ -194,7 +197,6 @@ def inject_musts_methods():
     set_method_to_builtin(types.NoneType, classmethod(ppl), 'ppl')
     # set_method_to_builtin(types.NoneType, classmethod(must_equal), 'must_equal')
 
-    import __builtin__
     __builtin__.flag_test = flag_test_func
 
 inject_musts_methods()

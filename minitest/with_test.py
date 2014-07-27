@@ -20,13 +20,16 @@ def get_test_self():
     return TestSelf()
 
 class TestFailure(object):
-    def __init__(self, actual, expected, frame):
+    def __init__(self, actual, expected, frame, failure_msg):
         self.actual = actual
         self.expected = expected
         self.frame = frame
+        self.failure_msg = failure_msg
 
     def __str__(self):
         result = inject_methods.gen_line_info(self.frame) + "\n"
+        if self.failure_msg:
+            result += " MESSAGE: %s\n" % pprint.pformat(self.failure_msg)
         result += "EXPECTED: %s\n" % pprint.pformat(self.expected)
         result += "  ACTUAL: %s\n"  % pprint.pformat(self.actual)
         return result
@@ -75,8 +78,9 @@ class TestCase(object):
     def add_assertion(self):
         self.assertion_count += 1
 
-    def add_failure(self, actual, expected, frame):
-        self.failures.append(TestFailure(actual, expected, frame))
+    def add_failure(self, actual, expected, frame, failure_msg):
+        self.failures.append(TestFailure(
+            actual, expected, frame,failure_msg))
 
     def print_report(self):
         pass_seconds = (self.end_time - self.start_time).total_seconds()
@@ -91,11 +95,6 @@ class TestCase(object):
     def print_failure(self, index, failure):
         print "%d) Failure:" % (index+1)
         print failure
-        # print 'File "%s", line %d:' % (failure.file_path, failure.line_no)
-        # print "EXPECTED: %s" % pprint.pformat(failure.expected)
-        # print "  ACTUAL: %s"  % pprint.pformat(failure.actual)
-        # print "-[%s]" % pprint.pformat(failure.expected)
-        # print "#[%s]" % pprint.pformat(failure.actual)
         print
         return True
 
@@ -233,7 +232,19 @@ if __name__ == '__main__':
         (1).must_equal(10, close_one)
         (1).must_close(10)
 
+    with test("with failure_msg"):
+        the_number = 10
+        (the_number % 2).must_equal(1, 
+            failure_msg="{0} is the number".format(the_number))
+        # it wont show the failure_msg
+        (the_number % 2).must_equal(0, 
+            failure_msg="{0} is the number".format(the_number))
 
+        (True).must_false(
+            failure_msg="{0} is the number".format(the_number))
+
+        (lambda : div_zero()).must_raise(ZeroDivisionError, "in",
+            failure_msg="{0} is the number".format(the_number))
 
     class Person(object):
         def __init__(name):

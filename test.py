@@ -80,6 +80,20 @@ if __name__ == '__main__':
         sub_test_module.test_flag_test()
         flag_test("for test")
 
+    with test("with failure_msg"):
+        the_number = 10
+        (the_number % 2).must_equal(1, 
+            failure_msg="{0} is the number".format(the_number))
+        # it wont show the failure_msg
+        (the_number % 2).must_equal(0, 
+            failure_msg="{0} is the number".format(the_number))
+
+        (True).must_false(
+            failure_msg="{0} is the number".format(the_number))
+
+        (lambda : div_zero()).must_raise(ZeroDivisionError, "in",
+            failure_msg="{0} is the number".format(the_number))
+
     value = "Minitest"
     value.p()
     value.p("It is a value:")

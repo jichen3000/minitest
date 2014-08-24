@@ -94,6 +94,17 @@ if __name__ == '__main__':
         (lambda : div_zero()).must_raise(ZeroDivisionError, "in",
             failure_msg="{0} is the number".format(the_number))
 
+    with test("format functions"):
+        foo=dict(name="foo", value="bar")
+        foo.p_format().must_equal("foo : {'name': 'foo', 'value': 'bar'}")
+        foo.pp_format().must_equal("foo :\n{'name': 'foo', 'value': 'bar'}")
+        # foo.pl_format().must_equal(
+        #     'line info: File "/Users/colin/work/minitest/minitest/with_test.py", line 254, in <module>:\n'+
+        #     'foo :\n{\'name\': \'foo\', \'value\': \'bar\'}')
+        # foo.ppl_format().must_equal(
+        #     'line info: File "/Users/colin/work/minitest/minitest/with_test.py", line 257, in <module>:\n'+
+        #     'foo :\n{\'name\': \'foo\', \'value\': \'bar\'}')
+
     value = "Minitest"
     value.p()
     value.p("It is a value:")
@@ -110,6 +121,15 @@ if __name__ == '__main__':
     value.ppl()
     value.ppl("It is a value:")
     value.ppl(auto_get_title=False)
+
+
+    import logging
+    logging.basicConfig(level=logging.DEBUG)
+    foo=dict(name="foo", value="bar")
+    logging.info(foo.p_format())
+    logging.info(foo.pp_format())
+    logging.info(foo.pl_format())
+    logging.info(foo.ppl_format())
 
     [1, 2].length().pp()
     (1, 2).size().pp()

@@ -246,11 +246,30 @@ if __name__ == '__main__':
         (lambda : div_zero()).must_raise(ZeroDivisionError, "in",
             failure_msg="{0} is the number".format(the_number))
 
+    with test("format functions"):
+        foo=dict(name="foo", value="bar")
+        foo.p_format().must_equal("foo : {'name': 'foo', 'value': 'bar'}")
+        foo.pp_format().must_equal("foo :\n{'name': 'foo', 'value': 'bar'}")
+        # foo.pl_format().must_equal(
+        #     'line info: File "/Users/colin/work/minitest/minitest/with_test.py", line 254, in <module>:\n'+
+        #     'foo :\n{\'name\': \'foo\', \'value\': \'bar\'}')
+        # foo.ppl_format().must_equal(
+        #     'line info: File "/Users/colin/work/minitest/minitest/with_test.py", line 257, in <module>:\n'+
+        #     'foo :\n{\'name\': \'foo\', \'value\': \'bar\'}')
+
+
     class Person(object):
         def __init__(name):
             self.name = name
 
     print "\nstart to show print results:"
+    import logging
+    logging.basicConfig(level=logging.DEBUG)
+    foo=dict(name="foo", value="bar")
+    logging.info(foo.p_format())
+    logging.info(foo.pp_format())
+    logging.info(foo.pl_format())
+    logging.info(foo.ppl_format())
     None.p()
     None.pp()
     tself.jc.p()

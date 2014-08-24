@@ -6,7 +6,8 @@ This project is inspired by Ruby minispec, but now it just implement some method
     
 And some other useful functions:
 
-	p, pp, pl, ppl, length, size, inject, flag_test
+	p, pp, pl, ppl, length, size, inject, flag_test,
+    p_format, pp_format, pl_format, ppl_format.
 
 github: [https://github.com/jichen3000/minitest](https://github.com/jichen3000/minitest)
 
@@ -19,12 +20,11 @@ pypi: [https://pypi.python.org/pypi/minitest](https://pypi.python.org/pypi/minit
 Colin Ji <jichen3000@gmail.com>
 
 
-### How to use
-install:
+### How to install
 
     pip install minitest
 
-code:
+### How to use
 
     if __name__ == '__main__':
         # import the minitest
@@ -140,74 +140,146 @@ result:
 
 ### Other useful function
 
-p, pp, pl, ppl, length, size, these four functions could been used by any object.
+p, pp, pl, ppl, length, size, p_format, pp_format, pl_format, ppl_format these ten functions could been used by any object.
     
-p is a print function. This function will add variable name as the title.
-code:
-    
-    value = "Minitest"
-    # add a title 'value : ' automatically.
-    value.p()        				# value : Minitest
-    
-    # or you can give a string as title.
-    value.p("It is a value:")		# It is a value: Minitest
-    
-    # if you don't want a title, use the parameter
-    value.p(auto_get_title=False)	# Minitest
-    
-pp is another print function which will invoke the pprint.pprint function.
-Its parameters are just like the p.
-code:
+p, print with title. This function will print variable name as the title.
+<br>code:
     
     value = "Minitest"
-    value.pp()                      # value :
-                                    # 'Minitest'
+    value.p()
                                     
-    value.pp("It is a value:")      #  It is a value:
-                                    # 'Minitest'
+    value.p("It is a value:")   
                                     
-    value.pp(auto_get_title=False)  # 'Minitest'
-    
-pl is another print function which will print the file path and line NO.
-And some editors support to go to the line of that file, such as Sublime2.
-Its parameters are just like the p.
-Notice, it will print new line firstly, since in some case, there will be other string before file path, which cause some editor cannot jump to the location.
+    value.p(auto_get_title=False)    
 
-code:
+print result:
+
+    value : 'Minitest'
+
+    It is a value: 'Minitest'
+
+    'Minitest'
+    
+pp, pretty print with title. This function will print variable name as the title
+in the first line, then pretty print the content of variable below the title.
+<br>code:
     
     value = "Minitest"
-    value.pl()                      #     
-                                    #     File "/Users/Colin/work/minitest/test.py", line 72
-                                    # value : Minitest
+    value.pp()
                                     
-    value.pl("It is a value:")      #     
-                                    #     File "/Users/Colin/work/minitest/test.py", line 73
-                                    #  It is a value: Minitest
+    value.pp("It is a value:")   
                                     
-    value.pl(auto_get_title=False)  #     
-                                    #     File "/Users/Colin/work/minitest/test.py", line 74
-                                    # Minitest
-    
-ppl is another print function which will print the file path and line NO.
-It almost like pl except print value in another new line.
-Notice, it will print new line firstly.
-code:
+    value.pp(auto_get_title=False)    
+
+print result:
+
+    value :
+    'Minitest'
+
+     It is a value:
+    'Minitest'
+
+    'Minitest'
+
+pl, print with title and code loction. This function just like pt, but will print
+the code location at the first line.
+And some editors support to go to the line of that file, such as Sublime2.
+<br>code:
     
     value = "Minitest"
-    value.ppl()                     #     
-                                    #     File "/Users/Colin/work/minitest/test.py", line 76
-                                    # value :
-                                    # 'Minitest'
+    value.pl()
                                     
-    value.ppl("It is a value:")     #     
-                                    #     File "/Users/Colin/work/minitest/test.py", line 77
-                                    #  It is a value:
-                                    # 'Minitest'
+    value.pl("It is a value:")   
                                     
-    value.ppl(auto_get_title=False) #     
-                                    #     File "/Users/Colin/work/minitest/test.py", line 78
-                                    # 'Minitest'
+    value.pl(auto_get_title=False)    
+
+print result:
+
+
+        File "/Users/Colin/work/minitest/test.py", line 76
+    value : 'Minitest'
+
+
+        File "/Users/Colin/work/minitest/test.py", line 77
+     It is a value: 'Minitest'
+
+
+        File "/Users/Colin/work/minitest/test.py", line 78
+    'Minitest'
     
+ppl, pretty print with title and code loction. This function just like ppt, but will print
+the code location at the first line.
+Notice: it will print a null line firstly.
+<br>code:
+    
+    value = "Minitest"
+    value.ppl()
+                                    
+    value.ppl("It is a value:")   
+                                    
+    value.ppl(auto_get_title=False)    
+
+print result:
+
+
+        File "/Users/Colin/work/minitest/test.py", line 76
+    value :
+    'Minitest'
+
+
+        File "/Users/Colin/work/minitest/test.py", line 77
+     It is a value:
+    'Minitest'
+
+
+        File "/Users/Colin/work/minitest/test.py", line 78
+    'Minitest'
+
+p_format, get the string just like p function prints.
+I use it in debugging with log, like: logging.debug(value.p_format())
+<br>code:
+    
+    value = "Minitest"
+    value.p_format()
+
+return result:
+
+    value : 'Minitest'
+
+pp_format, get the string just like pp function prints.
+I use it in debugging with log, like: logging.debug(value.pp_format())
+<br>code:
+    
+    value = "Minitest"
+    value.pp_format()
+
+return result:
+
+    value :\n'Minitest'
+
+pl_format, get the string just like pl function prints.
+I use it in debugging with log, like: logging.debug(value.pl_format())
+<br>code:
+    
+    value = "Minitest"
+    value.pl_format()
+
+return result:
+
+    line info: File "/Users/Colin/work/minitest/test.py", line 76, in <module>\nvalue : 'Minitest'
+    
+ppl_format, get the string just like ppl function prints.
+I use it in debugging with log, like: logging.debug(value.ppl_format())
+<br>code:
+    
+    value = "Minitest"
+    value.ppl_format()
+
+return result:
+
+    line info: File "/Users/Colin/work/minitest/test.py", line 76, in <module>\nvalue :\n'Minitest'
+    
+
 length and size will invoke len function for the caller's object.
 code:
 
@@ -227,17 +299,18 @@ For being convient, I use inject_customized_must_method or inject function like:
     inject(numpy.allclose, 'must_close')
     numpy.array([1]).must_close(numpy.array([1.0]))
 
-flag_test will print a message 'This place have codes for test!' with the file path, file NO.
-code:
+flag_test will print a message 'There are codes for test in this place!' with the code loction.
+<br>code:
 
     flag_test()
 
-    # print like:
+    # add a title
+    flag_test("for test")
+
+print result:
+
         File "/Users/colin/work/minitest/test.py", line 97, in <module>:
-    This place have codes for test!    
+    There are test codes in this place!    
 
-    flag_test("for test")  # add a title
-
-    # print like:
         File "/Users/colin/work/minitest/test.py", line 101, in <module>:
-    for test: This place have codes for test!    
+    for test : There are test codes in this place!    

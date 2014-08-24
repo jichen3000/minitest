@@ -1,6 +1,8 @@
 import ctypes
 import inspect
 import operator
+import traceback
+import pprint
 
 from variables import *
 import types
@@ -66,28 +68,21 @@ def must_raise(self, raised_exception, exception_msg=None, failure_msg=None):
     else:
         "It must be a function."
 
-def gen_title_from_stack_info(stack_info):
+# def gen_title_from_stack_info(stack_info):
+#     ''' it will generate the title from stack info.
+
+#     '''
+#     text  = stack_info[-2][-1]
+#     index = text.rfind(".")
+#     return text[:index]+" :"
+
+def gen_title_from_stack_info(stack_info, func_name):
     ''' it will generate the title from stack info.
 
     '''
     text  = stack_info[-2][-1]
-    index = text.rfind(".")
+    index = text.rfind("."+func_name)
     return text[:index]+" :"
-
-import traceback
-def p(self, title=None, auto_get_title=True):
-    result = self
-    # if type(result) == types.NoneType:
-    #     result = None
-    if title:
-        print title, result
-    else:
-        if auto_get_title:
-            print gen_title_from_stack_info(
-                traceback.extract_stack()), result
-        else:
-            print result
-    return result
 
 def gen_line_info(frame):
     '''
@@ -101,9 +96,23 @@ def gen_line_info(frame):
     '''
     return 'File "%s", line %d, in %s:' % (frame[1], frame[2], frame[3])
 
+def p(self, title=None, auto_get_title=True):
+    self_func_name = 'p'
+    result = self
+    # if type(result) == types.NoneType:
+    #     result = None
+    if title:
+        print title, result
+    else:
+        if auto_get_title:
+            print gen_title_from_stack_info(
+                traceback.extract_stack(), self_func_name), result
+        else:
+            print result
+    return result
 
-from pprint import pprint
 def pp(self, title=None, auto_get_title=True):
+    self_func_name = 'pp'
     result = self
     # if type(result) == types.NoneType:
     #     result = None
@@ -112,9 +121,35 @@ def pp(self, title=None, auto_get_title=True):
     else:
         if auto_get_title:
             print gen_title_from_stack_info(
-                traceback.extract_stack())
-    pprint(result)
+                traceback.extract_stack(), self_func_name)
+    pprint.pprint(result)
     return result
+
+def p_format(self):
+    self_func_name = 'p_format'
+    title = gen_title_from_stack_info(
+        traceback.extract_stack(), self_func_name)
+    return "%s %s" % (title, self)
+
+def pp_format(self):
+    self_func_name = 'pp_format'
+    title = gen_title_from_stack_info(
+        traceback.extract_stack(), self_func_name)
+    return "%s\n%s" % (title, pprint.pformat(self))
+
+def pl_format(self):
+    self_func_name = 'pl_format'
+    title = gen_title_from_stack_info(
+        traceback.extract_stack(), self_func_name)
+    current_frame = inspect.getouterframes(inspect.currentframe())[1]
+    return "line info: %s\n%s\n%s" % (gen_line_info(current_frame), title, self)
+
+def ppl_format(self):
+    self_func_name = 'ppl_format'
+    title = gen_title_from_stack_info(
+        traceback.extract_stack(), self_func_name)
+    current_frame = inspect.getouterframes(inspect.currentframe())[1]
+    return "line info: %s\n%s\n%s" % (gen_line_info(current_frame), title, pprint.pformat(self))
 
 def pl(self, title=None, auto_get_title=True):
     ''' p with line information including file full path and line number.
@@ -122,6 +157,7 @@ def pl(self, title=None, auto_get_title=True):
         there will be other string before file path
         and some editor cannot jump to the location.
     '''
+    self_func_name = 'pl'
     result = self
     current_frame = inspect.getouterframes(inspect.currentframe())[1]
     print('\n    '+gen_line_info(current_frame))
@@ -131,7 +167,7 @@ def pl(self, title=None, auto_get_title=True):
     else:
         if auto_get_title:
             print gen_title_from_stack_info(
-                traceback.extract_stack()), result
+                traceback.extract_stack(), self_func_name), result
         else:
             print result
     return result
@@ -142,6 +178,7 @@ def ppl(self, title=None, auto_get_title=True):
         there will be other string before file path
         and some editor cannot jump to the location.
     '''
+    self_func_name = 'ppl'
     result = self
     current_frame = inspect.getouterframes(inspect.currentframe())[1]
     print('\n    '+gen_line_info(current_frame))
@@ -151,8 +188,8 @@ def ppl(self, title=None, auto_get_title=True):
     else:
         if auto_get_title:
             print gen_title_from_stack_info(
-                traceback.extract_stack())
-    pprint(result)
+                traceback.extract_stack(), self_func_name)
+    pprint.pprint(result)
     return result
 
 def length(self):
@@ -167,7 +204,7 @@ def flag_test_func(title=None):
         there will be other string before file path
         and some editor cannot jump to the location.
     '''
-    msg = 'This place have codes for test!'
+    msg = 'There are test codes in this place!'
     current_frame = inspect.getouterframes(inspect.currentframe())[1]
     print('\n    '+gen_line_info(current_frame))
 
@@ -196,6 +233,15 @@ def inject_musts_methods():
     set_method_to_builtin(types.NoneType, classmethod(pl), 'pl')
     set_method_to_builtin(types.NoneType, classmethod(ppl), 'ppl')
     # set_method_to_builtin(types.NoneType, classmethod(must_equal), 'must_equal')
+
+    set_method_to_object(p_format)
+    set_method_to_builtin(types.NoneType, classmethod(p_format), 'p_format')
+    set_method_to_object(pp_format)
+    set_method_to_builtin(types.NoneType, classmethod(pp_format), 'pp_format')
+    set_method_to_object(pl_format)
+    set_method_to_builtin(types.NoneType, classmethod(pl_format), 'pl_format')
+    set_method_to_object(ppl_format)
+    set_method_to_builtin(types.NoneType, classmethod(ppl_format), 'ppl_format')
 
     __builtin__.flag_test = flag_test_func
 

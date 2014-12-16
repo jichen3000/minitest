@@ -35,6 +35,7 @@ if __name__ == '__main__':
 
     with test(object.must_true):
         True.must_true()
+        1/0
         False.must_true()
 
     with test(object.must_false):

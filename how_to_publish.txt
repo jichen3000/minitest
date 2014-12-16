@@ -1,0 +1,6 @@
+1. change CHANGES.txt
+2. change setup.py for version
+3. check TODO
+4. check README
+5. change minitest/__init__.py for version
+6. python setup.py sdist upload

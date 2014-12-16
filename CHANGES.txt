@@ -1,6 +1,14 @@
 Changes
 -------
 
+1.6.1 (2014-08-24)
+~~~~
+
+Fix that the error count is always 0.
+
+Changes
+-------
+
 1.6.0 (2014-08-24)
 ~~~~
 

@@ -6,6 +6,8 @@ import pprint
 
 from variables import *
 import types
+import new
+
 
 import __builtin__
 
@@ -214,6 +216,9 @@ def flag_test_func(title=None):
         print msg
     return True
 
+def for_test():
+    print "for test"
+
 def inject_musts_methods():
     [set_method_to_object(func) for name, func 
         in globals().iteritems() 
@@ -233,6 +238,10 @@ def inject_musts_methods():
     set_method_to_builtin(types.NoneType, classmethod(pl), 'pl')
     set_method_to_builtin(types.NoneType, classmethod(ppl), 'ppl')
     # set_method_to_builtin(types.NoneType, classmethod(must_equal), 'must_equal')
+
+    # set_method_to_object(for_test)
+    set_method_to_builtin(new.classobj, for_test, 'for_test')
+
 
     set_method_to_object(p_format)
     set_method_to_builtin(types.NoneType, classmethod(p_format), 'p_format')

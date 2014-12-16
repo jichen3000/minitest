@@ -11,7 +11,7 @@ import inject_methods
 from variables import *
 import types
 
-__all__ = ['test', 'test_case', 'get_test_self', 'inject', 'inject_customized_must_method', 'flag_test']
+__all__ = ['test', 'test_case', 'get_test_self', 'inject', 'inject_customized_must_method']
 
 class TestSelf(object):
     pass
@@ -44,6 +44,7 @@ class TestCase(object):
         self.test_methods = []
         self.assertion_count = 0
         self.failures = []
+        self.error_count = 0
 
     def __enter__(self):
         self.start_time = datetime.now()
@@ -58,6 +59,7 @@ class TestCase(object):
             # print value
             # print tb
             print traceback.format_exc()
+            self.add_error_count()
         set_current_test_case(None)
         self.print_report()
         return self
@@ -75,6 +77,9 @@ class TestCase(object):
         self.test_methods.append(test_method)
         return self
 
+    def add_error_count(self):
+        self.error_count += 1;
+
     def add_assertion(self):
         self.assertion_count += 1
 
@@ -89,7 +94,7 @@ class TestCase(object):
         [self.print_failure(index, failure) for index, failure in enumerate(self.failures)]
         # map(self.print_failure, enumerate(self.failures))
         print "%d tests, %d assertions, %d failures, %d errors." %\
-          (len(self.test_methods), self.assertion_count, len(self.failures), 0)
+          (len(self.test_methods), self.assertion_count, len(self.failures), self.error_count)
         return True
         
     def print_failure(self, index, failure):
@@ -147,6 +152,7 @@ class TestMethod(object):
             # print value
             # print tb
             print traceback.format_exc()
+            get_current_test_case().add_error_count()
         # print "method exit"
         if self.failed_flag:
             sys.stdout.write('F')
@@ -207,6 +213,7 @@ if __name__ == '__main__':
     with test("object.must_equal_with_func"):
         (1).must_equal(1, key=operator.eq)
         (1).must_equal(2, key=operator.eq)
+        1/0
 
     def div_zero():
         1/0
@@ -259,7 +266,7 @@ if __name__ == '__main__':
 
 
     class Person(object):
-        def __init__(name):
+        def __init__(self, name):
             self.name = name
 
     print "\nstart to show print results:"
@@ -283,4 +290,11 @@ if __name__ == '__main__':
     [1, 2].length().pp()
     (1, 2).size().pp()
     flag_test()
+
+    class OldStyle:
+        pass
+
+    with test("OldStyle"):
+        print (dir(OldStyle()))
+        print (dir(Person("nn")))
 

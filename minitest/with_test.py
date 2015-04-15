@@ -3,6 +3,7 @@
 ''' 
 
 import sys
+import inspect
 import traceback
 from datetime import datetime
 import pprint
@@ -12,6 +13,8 @@ from variables import *
 import types
 
 __all__ = ['test', 'test_case', 'get_test_self', 'inject', 'inject_customized_must_method']
+
+global_test_function_names = None
 
 class TestSelf(object):
     pass
@@ -132,6 +135,9 @@ class TestCase(object):
 # 2 tests, 9 assertions, 0 failures, 0 errors, 0 skips
 # [Finished in 0.3s]
 
+class SkipException(Exception):
+    def __init__(self, message):
+        self.message = message
 
 class TestMethod(object):
     def __init__(self, msg=None):
@@ -140,20 +146,28 @@ class TestMethod(object):
 
     def __enter__(self):
         # print "test enter"
+        # skip some test functions which are not in global_test_function_names
+        if global_test_function_names and self.msg not in global_test_function_names:
+            sys.settrace(lambda *args, **keys: None)
+            frame = inspect.currentframe(1)
+
+            frame.f_trace = self.trace
+            return self            
         if not is_current_test_case():
             TestCase.create()
         set_current_test_method(self)
         get_current_test_case().add_test_method(self)
         return self
 
+    def trace(self, frame, event, arg):
+        raise SkipException("!!! for only_test!!!")
+
     def __exit__(self, e_type=None, value=None, tb=None):
-        if e_type != None:
-            # print e_type
-            # print value
-            # print tb
+        # print "method exit"
+        if e_type != None and not isinstance(value, SkipException):
+            # show the error
             print traceback.format_exc()
             get_current_test_case().add_error_count()
-        # print "method exit"
         if self.failed_flag:
             sys.stdout.write('F')
         else:
@@ -185,6 +199,25 @@ def inject_customized_must_method(key_method, method_name=None, must_method=obje
     return method_func
 
 inject = inject_customized_must_method
+
+def only_test(*args):
+    global global_test_function_names
+    global_test_function_names = args
+    function_names = [func if isinstance(func, str) else func.func_name 
+            for func in args]
+    print "Notice: only test these functions: {function_names}\n".format(
+            function_names=function_names)
+    return global_test_function_names
+    # if not (isinstance(function_names, list) or isinstance(function_names, tuple)):
+    #     function_names = (function_names,)
+    # if function_names[0] == 'all':
+    #     function_names = None
+    #     global_test_function_names = function_names
+    #     return function_names
+    # global_test_function_names = function_names
+    # return function_names
+
+
 
 if __name__ == '__main__':
 

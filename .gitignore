@@ -13,4 +13,4 @@
 *.dataset
 build
 dist
-*.tags\*
+.tags*

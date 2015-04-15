@@ -2,7 +2,7 @@
 
 This project is inspired by Ruby minispec, but now it just implement some methods including:
     
-    must_equal, must_true, must_false, must_raise.
+    must_equal, must_true, must_false, must_raise, only_test.
     
 And some other useful functions:
 
@@ -25,6 +25,9 @@ Colin Ji <jichen3000@gmail.com>
     pip install minitest
 
 ### How to use
+
+For a simple example, you just write a function called x, and I would like to write the unittest in same file as:
+<br>code:
 
     if __name__ == '__main__':
         # import the minitest
@@ -137,6 +140,44 @@ result:
 
     10 tests, 18 assertions, 7 failures, 0 errors.
     [Finished in 0.1s]
+
+### only_test function
+
+If you just want to run some test functions, you can use only_test funtion to specify them.
+Notice, you must put it on the top of test functions, just like the below example.
+<br>code:
+
+    def foo():
+        return "foo"
+
+    def bar():
+        return "bar"
+
+    if __name__ == '__main__':
+        from minitest import *
+
+
+        only_test("for only run", foo)
+
+        with test("for only run"):
+            (1).must_equal(1)
+            (2).must_equal(2)
+            pass
+
+        with test("other"):
+            (1).must_equal(1)
+            (2).must_equal(2)
+            pass    
+
+        with test(foo):
+            foo().must_equal("foo")
+
+        with test(bar):
+            bar().must_equal("bar")
+
+
+It will only run test("for only run") and test(foo) for you.
+
 
 ### Other useful function
 

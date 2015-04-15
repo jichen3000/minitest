@@ -1,13 +1,30 @@
 Changes
 -------
 
+1.7.3 (2015-04-15)
+~~~~
+
+Fix the issue which don't show the error.
+
+1.7.2 (2015-03-30)
+~~~~
+
+Add more description for only_test function.
+
+1.7.1 (2015-03-30)
+~~~~
+
+Fix typo in readme.
+
+1.7.0 (2015-03-30)
+~~~~
+
+Support only_test function.
+
 1.6.1 (2014-08-24)
 ~~~~
 
 Fix that the error count is always 0.
-
-Changes
--------
 
 1.6.0 (2014-08-24)
 ~~~~

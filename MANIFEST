@@ -7,3 +7,4 @@ minitest/issue_handler.py
 minitest/test_without_test_case.py
 minitest/variables.py
 minitest/with_test.py
+test/test_only.py

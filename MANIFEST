@@ -3,8 +3,8 @@ README.txt
 setup.py
 minitest/__init__.py
 minitest/inject_methods.py
-minitest/issue_handler.py
-minitest/test_without_test_case.py
 minitest/variables.py
 minitest/with_test.py
+test/test.py
 test/test_only.py
+test/test_without_test_case.py

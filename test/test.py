@@ -1,12 +1,3 @@
-# http://guide.python-distribute.org/creation.html
-# distribute to PyPI
-# Create your distribution
-# python setup.py sdist
-# Uploading your distribution file
-# python setup.py register # just run in first time.
-
-# python setup.py sdist upload
-
 def test_pl():
     'test_pl'.pl()
 

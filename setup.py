@@ -1,8 +1,9 @@
+import minitest
 from distutils.core import setup
 
 setup(
     name='minitest',
-    version='1.7.3',
+    version=minitest.__version__,
     author='Colin Ji',
     author_email='jichen3000@gmail.com',
     packages=['minitest'],

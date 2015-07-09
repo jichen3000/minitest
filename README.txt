@@ -6,14 +6,15 @@ some methods including:
 
 ::
 
-    must_equal, must_true, must_false, must_raise, only_test.
+    must_equal, must_true, must_false, must_raise, must_output, only_test.
 
 And some other useful functions:
 
 ::
 
     p, pp, pl, ppl, length, size, inject, flag_test,
-    p_format, pp_format, pl_format, ppl_format.
+    p_format, pp_format, pl_format, ppl_format,
+    capture_output.
 
 github: https://github.com/jichen3000/minitest
 
@@ -22,19 +23,19 @@ pypi: https://pypi.python.org/pypi/minitest
 --------------
 
 Author
-~~~~~~
+------
 
 Colin Ji jichen3000@gmail.com
 
 How to install
-~~~~~~~~~~~~~~
+--------------
 
 ::
 
     pip install minitest
 
 How to use
-~~~~~~~~~~
+----------
 
 For a simple example, you just write a function called x, and I would
 like to write the unittest in same file as: code:
@@ -96,6 +97,23 @@ like to write the unittest in same file as: code:
             (lambda : div_zero()).must_raise(ZeroDivisionError, "in",
                 failure_msg="{0} is the number".format(the_number))
 
+        def print_msg_twice(msg):
+            print msg
+            print msg
+            return msg
+            
+        with test("capture_output"):
+            with capture_output() as output:
+                result = print_msg_twice("foobar")
+            result.must_equal("foobar")
+            output.must_equal(["foobar","foobar"])
+
+        with test("must output"):
+            (lambda : print_msg_twice("foobar")).must_output(
+                    ["foobar","foobar"])
+            (lambda : print_msg_twice("foobar")).must_output(
+                    ["foobar","wrong"])
+
 result:
 
 ::
@@ -150,12 +168,16 @@ result:
     EXPECTED: 'in'
       ACTUAL: 'integer division or modulo by zero'
 
+    8) Failure:
+    File "/Users/colin/work/minitest/test.py", line 102, in <module>:
+    EXPECTED: ['foobar', 'wrong']
+      ACTUAL: ['foobar', 'foobar']
 
-    10 tests, 18 assertions, 7 failures, 0 errors.
+    12 tests, 22 assertions, 8 failures, 0 errors.
     [Finished in 0.1s]
 
 only\_test function
-~~~~~~~~~~~~~~~~~~~
+-------------------
 
 If you just want to run some test functions, you can use only\_test
 funtion to specify them. Notice, you must put it on the top of test
@@ -194,10 +216,29 @@ functions, just like the below example. code:
 It will only run test("for only run") and test(foo) for you.
 
 Other useful function
-~~~~~~~~~~~~~~~~~~~~~
+---------------------
 
-p, pp, pl, ppl, length, size, p\_format, pp\_format, pl\_format,
-ppl\_format these ten functions could been used by any object.
+capture\_output, p, pp, pl, ppl, length, size, p\_format, pp\_format,
+pl\_format, ppl\_format these functions could been used by any object.
+
+capture\_output, capture the standard output. This function will print
+variable name as the title. code: def print\_msg\_twice(msg): print msg
+print msg return msg
+
+::
+
+    with capture_output() as output:
+        result = print_msg_twice("foobar")
+
+    print result
+    print output
+
+print result:
+
+::
+
+    "foobar"
+    ["foobar","foobar"]
 
 p, print with title. This function will print variable name as the
 title. code:
@@ -405,4 +446,3 @@ print result:
 
         File "/Users/colin/work/minitest/test.py", line 101, in <module>:
     for test : There are test codes in this place!    
-

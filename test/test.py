@@ -97,6 +97,23 @@ if __name__ == '__main__':
         #     'line info: File "/Users/colin/work/minitest/minitest/with_test.py", line 257, in <module>:\n'+
         #     'foo :\n{\'name\': \'foo\', \'value\': \'bar\'}')
 
+    def print_msg_twice(msg):
+        print msg
+        print msg
+        return msg
+        
+    with test("capture_output"):
+        with capture_output() as output:
+            result = print_msg_twice("foobar")
+        result.must_equal("foobar")
+        output.must_equal(["foobar","foobar"])
+
+    with test("must output"):
+        (lambda : print_msg_twice("foobar")).must_output(
+                ["foobar","foobar"])
+        (lambda : print_msg_twice("foobar")).must_output(
+                ["foobar","wrong"])
+
     value = "Minitest"
     value.p()
     value.p("It is a value:")
@@ -115,13 +132,13 @@ if __name__ == '__main__':
     value.ppl(auto_get_title=False)
 
 
-    import logging
-    logging.basicConfig(level=logging.DEBUG)
-    foo=dict(name="foo", value="bar")
-    logging.info(foo.p_format())
-    logging.info(foo.pp_format())
-    logging.info(foo.pl_format())
-    logging.info(foo.ppl_format())
+    # import logging
+    # logging.basicConfig(level=logging.DEBUG)
+    # foo=dict(name="foo", value="bar")
+    # logging.info(foo.p_format())
+    # logging.info(foo.pp_format())
+    # logging.info(foo.pl_format())
+    # logging.info(foo.ppl_format())
 
     [1, 2].length().pp()
     (1, 2).size().pp()

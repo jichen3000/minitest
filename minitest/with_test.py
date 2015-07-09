@@ -7,12 +7,15 @@ import inspect
 import traceback
 from datetime import datetime
 import pprint
-
-import inject_methods
-from variables import *
 import types
 
-__all__ = ['test', 'test_case', 'get_test_self', 'inject', 'inject_customized_must_method']
+
+import inject_methods
+from inject_methods import capture_output
+from variables import *
+
+__all__ = ['test', 'test_case', 'get_test_self', 'inject', 
+        'inject_customized_must_method', 'only_test', 'capture_output']
 
 global_test_function_names = None
 
@@ -219,6 +222,8 @@ def only_test(*args):
 
 
 
+
+
 if __name__ == '__main__':
 
     import operator
@@ -297,6 +302,22 @@ if __name__ == '__main__':
         #     'line info: File "/Users/colin/work/minitest/minitest/with_test.py", line 257, in <module>:\n'+
         #     'foo :\n{\'name\': \'foo\', \'value\': \'bar\'}')
 
+    def print_msg_twice(msg):
+        print msg
+        print msg
+        return msg
+
+    with test("capture_output"):
+        with capture_output() as output:
+            result = print_msg_twice("foobar")
+        result.must_equal("foobar")
+        output.must_equal(["foobar","foobar"])
+
+    with test("must output"):
+        (lambda : print_msg_twice("foobar")).must_output(
+                ["foobar","foobar"])
+        (lambda : print_msg_twice("foobar")).must_output(
+                ["foobar","wrong"])
 
     class Person(object):
         def __init__(self, name):

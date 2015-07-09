@@ -3,15 +3,25 @@ import inspect
 import operator
 import traceback
 import pprint
-
-from variables import *
 import types
 import new
-
-
 import __builtin__
+from cStringIO import StringIO
+import sys
+
+from variables import *
+
 
 __all__ = []
+
+class capture_output(list):
+    def __enter__(self):
+        self._stdout = sys.stdout
+        sys.stdout = self._stringio = StringIO()
+        return self
+    def __exit__(self, *args):
+        self.extend(self._stringio.getvalue().splitlines())
+        sys.stdout = self._stdout
 
 def get_dict(obj):
     _get_dict = ctypes.pythonapi._PyObject_GetDictPtr
@@ -69,6 +79,15 @@ def must_raise(self, raised_exception, exception_msg=None, failure_msg=None):
                 return run_compare(type(e), raised_exception, failure_msg=failure_msg)
     else:
         "It must be a function."
+
+def must_output(self, expected_output, failure_msg=None):
+    if hasattr(self, '__call__'):
+        with capture_output() as output:
+            result = self()
+        return run_compare(output, expected_output, failure_msg=failure_msg)
+    else:
+        "It must be a function."
+
 
 # def gen_title_from_stack_info(stack_info):
 #     ''' it will generate the title from stack info.

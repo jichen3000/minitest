@@ -1,13 +1,15 @@
- ☐ support python 3
  ☐ must_equal could support user message, when it fails.
  ☐ try to support old style object, it cannot be done.
  ☐ print exceptions at the last, and let character be 'E' instead of 'F'
  ☐ make readme easier to read.
  ☐ support put only_test not in the top of test functions.
+ ☐ in must_output, should check type(result) == types.NoneType
+ ☐ support invoke pp at class, like class My(object): pass  My.pp()
  
 
 
  Archive:
+ ✔ support python 3 @done (16-05-07 13:53)
  ✔ support must_output @done (15-07-08 11:15)
  ✔ only test, just only run one test, and others will be ignored. @done (15-03-30 08:28)
  ✔ correct error count. @done (14-12-15 20:16)

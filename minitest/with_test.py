@@ -7,12 +7,26 @@ import inspect
 import traceback
 from datetime import datetime
 import pprint
-import types
 
+if sys.version_info < (3, 0):
+    from types import NoneType
 
-import inject_methods
-from inject_methods import capture_output
-from variables import *
+    import inject_methods
+    from inject_methods import capture_output
+    from variables import *
+else:
+    NoneType = type(None)
+
+    try:
+        from . import inject_methods
+        from .inject_methods import capture_output
+        from .variables import *
+        # this for python 3 __main__, ugly!!
+    except SystemError:
+        import inject_methods
+        from inject_methods import capture_output
+        from variables import *
+
 
 __all__ = ['test', 'test_case', 'get_test_self', 'inject', 
         'inject_customized_must_method', 'only_test', 'capture_output']
@@ -54,17 +68,17 @@ class TestCase(object):
 
     def __enter__(self):
         self.start_time = datetime.now()
-        print "Running tests:\n"
+        print("Running tests:\n")
         set_current_test_case(self)
         return self
 
     def __exit__(self, e_type=None, value=None, tb=None):
         self.end_time = datetime.now()
         if e_type != None:
-            # print e_type
-            # print value
-            # print tb
-            print traceback.format_exc()
+            # print(e_type)
+            # print(value)
+            # print(tb)
+            print(traceback.format_exc())
             self.add_error_count()
         set_current_test_case(None)
         self.print_report()
@@ -95,18 +109,18 @@ class TestCase(object):
 
     def print_report(self):
         pass_seconds = (self.end_time - self.start_time).total_seconds()
-        print "\n"
-        print "Finished tests in %fs.\n" % pass_seconds
+        print("\n")
+        print("Finished tests in %fs.\n" % pass_seconds)
         [self.print_failure(index, failure) for index, failure in enumerate(self.failures)]
         # map(self.print_failure, enumerate(self.failures))
-        print "%d tests, %d assertions, %d failures, %d errors." %\
-          (len(self.test_methods), self.assertion_count, len(self.failures), self.error_count)
+        print("%d tests, %d assertions, %d failures, %d errors." %\
+          (len(self.test_methods), self.assertion_count, len(self.failures), self.error_count))
         return True
         
     def print_failure(self, index, failure):
-        print "%d) Failure:" % (index+1)
-        print failure
-        print
+        print("%d) Failure:" % (index+1))
+        print(failure)
+        print("")
         return True
 
 
@@ -148,7 +162,7 @@ class TestMethod(object):
         self.failed_flag = False
 
     def __enter__(self):
-        # print "test enter"
+        # print("test enter")
         # skip some test functions which are not in global_test_function_names
         if global_test_function_names and self.msg not in global_test_function_names:
             sys.settrace(lambda *args, **keys: None)
@@ -166,10 +180,10 @@ class TestMethod(object):
         raise SkipException("!!! for only_test!!!")
 
     def __exit__(self, e_type=None, value=None, tb=None):
-        # print "method exit"
+        # print("method exit")
         if e_type != None and not isinstance(value, SkipException):
             # show the error
-            print traceback.format_exc()
+            print(traceback.format_exc())
             get_current_test_case().add_error_count()
         if self.failed_flag:
             sys.stdout.write('F')
@@ -196,9 +210,12 @@ def inject_customized_must_method(key_method, method_name=None, must_method=obje
     '''
     def method_func(self, other):
         must_method(self, other, key=key_method)
-    method_name = method_name or 'must_'+key_method.func_code.co_name
+    if sys.version_info < (3, 0):
+        method_name = method_name or 'must_'+key_method.func_code.co_name
+    else:
+        method_name = method_name or 'must_'+key_method.__code__.co_name
     inject_methods.set_method_to_object(method_func, method_name)
-    inject_methods.set_method_to_builtin(types.NoneType, method_func, method_name)
+    inject_methods.set_method_to_builtin(NoneType, method_func, method_name)
     return method_func
 
 inject = inject_customized_must_method
@@ -208,8 +225,8 @@ def only_test(*args):
     global_test_function_names = args
     function_names = [func if isinstance(func, str) else func.func_name 
             for func in args]
-    print "Notice: only test these functions: {function_names}\n".format(
-            function_names=function_names)
+    print("Notice: only test these functions: {function_names}\n".format(
+            function_names=function_names))
     return global_test_function_names
     # if not (isinstance(function_names, list) or isinstance(function_names, tuple)):
     #     function_names = (function_names,)
@@ -237,6 +254,7 @@ if __name__ == '__main__':
     # declare a test
     with test(object.must_equal):
         tself.jc.must_equal('jc')
+        # import ipdb; ipdb.set_trace()
         None.must_equal(None)
 
     with test(object.must_true):
@@ -258,8 +276,12 @@ if __name__ == '__main__':
         
     # test excecption
     with test("test must_raise"):
+        if sys.version_info < (3, 0):
+            error_msg = "integer division or modulo by zero"
+        else:
+            error_msg = "division by zero"
         (lambda : div_zero()).must_raise(ZeroDivisionError)
-        (lambda : div_zero()).must_raise(ZeroDivisionError, "integer division or modulo by zero")
+        (lambda : div_zero()).must_raise(ZeroDivisionError, error_msg)
         (lambda : div_zero()).must_raise(ZeroDivisionError, "in")
 
     # customize your must method 
@@ -292,9 +314,9 @@ if __name__ == '__main__':
             failure_msg="{0} is the number".format(the_number))
 
     with test("format functions"):
-        foo=dict(name="foo", value="bar")
-        foo.p_format().must_equal("foo : {'name': 'foo', 'value': 'bar'}")
-        foo.pp_format().must_equal("foo :\n{'name': 'foo', 'value': 'bar'}")
+        foo = {'name': 'foo'}
+        foo.p_format().must_equal("foo : {'name': 'foo'}")
+        foo.pp_format().must_equal("foo :\n{'name': 'foo'}")
         # foo.pl_format().must_equal(
         #     'line info: File "/Users/colin/work/minitest/minitest/with_test.py", line 254, in <module>:\n'+
         #     'foo :\n{\'name\': \'foo\', \'value\': \'bar\'}')
@@ -303,8 +325,8 @@ if __name__ == '__main__':
         #     'foo :\n{\'name\': \'foo\', \'value\': \'bar\'}')
 
     def print_msg_twice(msg):
-        print msg
-        print msg
+        print(msg)
+        print(msg)
         return msg
 
     with test("capture_output"):
@@ -323,7 +345,7 @@ if __name__ == '__main__':
         def __init__(self, name):
             self.name = name
 
-    print "\nstart to show print results:"
+    print("\nstart to show print(results:")
     import logging
     logging.basicConfig(level=logging.DEBUG)
     foo=dict(name="foo", value="bar")
@@ -349,6 +371,21 @@ if __name__ == '__main__':
         pass
 
     with test("OldStyle"):
-        print (dir(OldStyle()))
-        print (dir(Person("nn")))
+        print((dir(OldStyle())))
+        print((dir(Person("nn"))))
+# py 3
+# 12 tests, 27 assertions, 13 failures, 1 errors.
+# py 2
+# 12 tests, 26 assertions, 11 failures, 2 errors.
+# right one
+# 12 tests, 27 assertions, 11 failures, 1 errors
 
+# Traceback (most recent call last):
+#   File "with_test.py", line 240, in <module>
+#     None.must_equal(None)
+# TypeError: must_equal() takes at least 2 arguments (1 given)
+
+# .FFTraceback (most recent call last):
+#   File "with_test.py", line 254, in <module>
+#     1/0
+# ZeroDivisionError: integer division or modulo by zero

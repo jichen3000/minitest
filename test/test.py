@@ -8,6 +8,9 @@ def test_flag_test():
     flag_test()
 
 if __name__ == '__main__':
+    import sys
+    print("sys.version_info:")
+    print(sys.version_info)
     # import the minitest
     from minitest import *
 
@@ -43,8 +46,13 @@ if __name__ == '__main__':
         
     # test excecption
     with test("test must_raise"):
+        if sys.version_info < (3, 0):
+            error_msg = "integer division or modulo by zero"
+        else:
+            error_msg = "division by zero"
+
         (lambda : div_zero()).must_raise(ZeroDivisionError)
-        (lambda : div_zero()).must_raise(ZeroDivisionError, "integer division or modulo by zero")
+        (lambda : div_zero()).must_raise(ZeroDivisionError, error_msg)
         (lambda : div_zero()).must_raise(ZeroDivisionError, "in")
 
     # customize your must method 
@@ -87,9 +95,9 @@ if __name__ == '__main__':
             failure_msg="{0} is the number".format(the_number))
 
     with test("format functions"):
-        foo=dict(name="foo", value="bar")
-        foo.p_format().must_equal("foo : {'name': 'foo', 'value': 'bar'}")
-        foo.pp_format().must_equal("foo :\n{'name': 'foo', 'value': 'bar'}")
+        foo = {'name': 'foo'}
+        foo.p_format().must_equal("foo : {'name': 'foo'}")
+        foo.pp_format().must_equal("foo :\n{'name': 'foo'}")
         # foo.pl_format().must_equal(
         #     'line info: File "/Users/colin/work/minitest/minitest/with_test.py", line 254, in <module>:\n'+
         #     'foo :\n{\'name\': \'foo\', \'value\': \'bar\'}')
@@ -98,8 +106,8 @@ if __name__ == '__main__':
         #     'foo :\n{\'name\': \'foo\', \'value\': \'bar\'}')
 
     def print_msg_twice(msg):
-        print msg
-        print msg
+        print(msg)
+        print(msg)
         return msg
         
     with test("capture_output"):
@@ -143,3 +151,6 @@ if __name__ == '__main__':
     [1, 2].length().pp()
     (1, 2).size().pp()
 
+    # python 2:
+    # 13 tests, 23 assertions, 7 failures, 2 errors.
+    # python 3:

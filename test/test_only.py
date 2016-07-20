@@ -26,7 +26,7 @@ if __name__ == '__main__':
     with test("for only run"):
         "ss".p()
         (1).must_equal(1)
-        (2).must_equal(2)
+        (2).must_equal(1)
         pass
 
     with test("other"):

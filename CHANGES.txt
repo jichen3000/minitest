@@ -1,6 +1,28 @@
 Changes
 -------
 
+2.0.3 (2016-07-20)
+~~~~
+
+Fix a bug for customized class comparation.
+Tested on python 2.
+
+2.0.2 (2016-05-07)
+~~~~
+
+Fix python 3 import in the __main__.
+Find python 3 dict print disorderly.
+
+2.0.1 (2016-05-07)
+~~~~
+
+Fix python 3 install bug.
+
+2.0.0 (2016-05-07)
+~~~~
+
+Support python 3
+
 1.8.0 (2015-07-08)
 ~~~~
 

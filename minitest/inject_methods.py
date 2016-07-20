@@ -1,15 +1,29 @@
+import sys
 import ctypes
 import inspect
 import operator
 import traceback
 import pprint
-import types
-import new
-import __builtin__
-from cStringIO import StringIO
-import sys
 
-from variables import *
+if sys.version_info < (3, 0):
+    from cStringIO import StringIO
+    import new
+    import __builtin__ as builtins
+    from types import NoneType
+
+    from variables import *
+else:
+    from io import StringIO
+    import builtins
+    NoneType = type(None)
+
+    try:
+        from .variables import *
+        # this for python 3 __main__, ugly!!
+    except SystemError:
+        from variables import *
+
+
 
 
 __all__ = []
@@ -30,7 +44,11 @@ def get_dict(obj):
     return _get_dict(obj).contents.value
 
 def set_method_to_builtin(clazz, method_func, method_name=None):
-    method_name = method_name or method_func.func_code.co_name
+    if sys.version_info < (3, 0):
+        method_name = method_name or method_func.func_code.co_name
+    else:
+        method_name = method_name or method_func.__code__.co_name
+
     get_dict(clazz)[method_name] = method_func
 
 def set_method_to_object(method_func, method_name=None):
@@ -40,9 +58,11 @@ def run_compare(actual, expected = True, func = operator.eq,
         failure_msg=None):
 
     try:            
-        if actual == types.NoneType:
+        if actual == NoneType:
             actual = None
-    except ValueError, e:
+    except (AttributeError,ValueError) as e:
+    # change for python 3
+    # except ValueError, e:
         pass
         
     test_case = get_current_test_case()
@@ -72,7 +92,7 @@ def must_raise(self, raised_exception, exception_msg=None, failure_msg=None):
         try:
             result = self()
             return run_compare(None, raised_exception, failure_msg=failure_msg)
-        except Exception, e:
+        except Exception as e:
             if type(e) == raised_exception and exception_msg != None:
                 return run_compare(str(e), exception_msg, failure_msg=failure_msg)
             else:
@@ -120,29 +140,29 @@ def gen_line_info(frame):
 def p(self, title=None, auto_get_title=True):
     self_func_name = 'p'
     result = self
-    # if type(result) == types.NoneType:
+    # if type(result) == NoneType:
     #     result = None
     if title:
-        print title, result
+        print(title, result)
     else:
         if auto_get_title:
-            print gen_title_from_stack_info(
-                traceback.extract_stack(), self_func_name), result
+            print(gen_title_from_stack_info(
+                traceback.extract_stack(), self_func_name), result)
         else:
-            print result
+            print(result)
     return result
 
 def pp(self, title=None, auto_get_title=True):
     self_func_name = 'pp'
     result = self
-    # if type(result) == types.NoneType:
+    # if type(result) == NoneType:
     #     result = None
     if title:
-        print title
+        print(title)
     else:
         if auto_get_title:
-            print gen_title_from_stack_info(
-                traceback.extract_stack(), self_func_name)
+            print(gen_title_from_stack_info(
+                traceback.extract_stack(), self_func_name))
     pprint.pprint(result)
     return result
 
@@ -184,13 +204,13 @@ def pl(self, title=None, auto_get_title=True):
     print('\n    '+gen_line_info(current_frame))
 
     if title:
-        print title, result
+        print(title, result)
     else:
         if auto_get_title:
-            print gen_title_from_stack_info(
-                traceback.extract_stack(), self_func_name), result
+            print(gen_title_from_stack_info(
+                traceback.extract_stack(), self_func_name), result)
         else:
-            print result
+            print(result)
     return result
 
 def ppl(self, title=None, auto_get_title=True):
@@ -205,11 +225,11 @@ def ppl(self, title=None, auto_get_title=True):
     print('\n    '+gen_line_info(current_frame))
 
     if title:
-        print title
+        print(title)
     else:
         if auto_get_title:
-            print gen_title_from_stack_info(
-                traceback.extract_stack(), self_func_name)
+            print(gen_title_from_stack_info(
+                traceback.extract_stack(), self_func_name))
     pprint.pprint(result)
     return result
 
@@ -230,20 +250,29 @@ def flag_test_func(title=None):
     print('\n    '+gen_line_info(current_frame))
 
     if title:
-        print title+":", msg
+        print(title+":", msg)
     else:
-        print msg
+        print(msg)
     return True
 
 def for_test():
-    print "for test"
+    print("for test")
 
 def inject_musts_methods():
+    # must use list(globals().iteritems()),
+    # if just use globals().iteritems(), 
+    # set_method_to_builtin(NoneType, classmethod(func), name) will not work,
+    # since in iteration, globals() will change.
+    if sys.version_info < (3, 0):
+        globals_items = list(globals().iteritems())
+    else:
+        globals_items = list(globals().items())
+
     [set_method_to_object(func) for name, func 
-        in globals().iteritems() 
+        in globals_items 
         if name.startswith('must_')]
-    [set_method_to_builtin(types.NoneType, classmethod(func), name) for name, func 
-        in globals().iteritems() 
+    [set_method_to_builtin(NoneType, classmethod(func), name) for name, func 
+        in globals_items 
         if name.startswith('must_')]
     set_method_to_object(p)
     set_method_to_object(pp)
@@ -252,26 +281,29 @@ def inject_musts_methods():
     set_method_to_object(length)
     set_method_to_object(size)
     # for None
-    set_method_to_builtin(types.NoneType, classmethod(p), 'p')
-    set_method_to_builtin(types.NoneType, classmethod(pp), 'pp')
-    set_method_to_builtin(types.NoneType, classmethod(pl), 'pl')
-    set_method_to_builtin(types.NoneType, classmethod(ppl), 'ppl')
-    # set_method_to_builtin(types.NoneType, classmethod(must_equal), 'must_equal')
+    set_method_to_builtin(NoneType, classmethod(p), 'p')
+    set_method_to_builtin(NoneType, classmethod(pp), 'pp')
+    set_method_to_builtin(NoneType, classmethod(pl), 'pl')
+    set_method_to_builtin(NoneType, classmethod(ppl), 'ppl')
+    # set_method_to_builtin(NoneType, classmethod(must_equal), 'must_equal')
+    # set_method_to_builtin(type, p, 'p')
 
     # set_method_to_object(for_test)
-    set_method_to_builtin(new.classobj, for_test, 'for_test')
+    if sys.version_info < (3, 0):
+        set_method_to_builtin(new.classobj, for_test, 'for_test')
 
 
     set_method_to_object(p_format)
-    set_method_to_builtin(types.NoneType, classmethod(p_format), 'p_format')
+    set_method_to_builtin(NoneType, classmethod(p_format), 'p_format')
     set_method_to_object(pp_format)
-    set_method_to_builtin(types.NoneType, classmethod(pp_format), 'pp_format')
+    set_method_to_builtin(NoneType, classmethod(pp_format), 'pp_format')
     set_method_to_object(pl_format)
-    set_method_to_builtin(types.NoneType, classmethod(pl_format), 'pl_format')
+    set_method_to_builtin(NoneType, classmethod(pl_format), 'pl_format')
     set_method_to_object(ppl_format)
-    set_method_to_builtin(types.NoneType, classmethod(ppl_format), 'ppl_format')
+    set_method_to_builtin(NoneType, classmethod(ppl_format), 'ppl_format')
 
-    __builtin__.flag_test = flag_test_func
+    builtins.flag_test = flag_test_func
+
 
 inject_musts_methods()
 

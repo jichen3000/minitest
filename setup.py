@@ -1,5 +1,21 @@
+from __future__ import with_statement
+
+try:
+    from setuptools import setup
+except ImportError:
+    from distutils.core import setup
+
 import minitest
-from distutils.core import setup
+
+
+cur_classifiers = [
+    "Programming Language :: Python :: 2",
+    "Programming Language :: Python :: 3",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Topic :: Software Development :: Libraries",
+    "Topic :: Utilities",
+]
 
 setup(
     name='minitest',
@@ -10,4 +26,6 @@ setup(
     url='https://pypi.python.org/pypi/minitest',
     description='Minitest is inspired by Ruby minispec.',
     long_description=open('README.txt').read(),
+    license="MIT",
+    classifiers=cur_classifiers    
 )
